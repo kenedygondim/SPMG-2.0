@@ -1,0 +1,2 @@
+INSERT INTO tb_roles VALUES ('PACIENTE');
+INSERT INTO tb_roles VALUES ('MEDICO');
