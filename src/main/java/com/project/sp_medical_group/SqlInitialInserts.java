@@ -19,6 +19,18 @@ public class SqlInitialInserts{
                 System.err.println("❌ Falha ao conectar ao banco de dados!");
                 e.printStackTrace();
             }
+
+            try {
+                jdbcTemplate.execute("INSERT INTO tb_roles VALUES ('ADMIN')");
+                jdbcTemplate.execute("INSERT INTO tb_roles VALUES ('MEDICO')");
+                jdbcTemplate.execute("INSERT INTO tb_roles VALUES ('PACIENTE')");
+
+                System.out.println("✅ Dados iniciais inseridos no banco de dados com sucesso!");
+            }
+            catch (Exception e) {
+                System.err.println("❌ Falha ao inserir dados iniciais no banco de dados!");
+                e.printStackTrace();
+            }
         };
     }
 }
