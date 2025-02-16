@@ -1,8 +1,13 @@
 package com.project.sp_medical_group.Repositories;
 
+import com.project.sp_medical_group.Dto.CriarRoleDto;
 import com.project.sp_medical_group.Models.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
-public interface RoleRepository extends JpaRepository<Role, Integer> {
-    Role findRoleByRoleName(String roleName);
+import java.util.List;
+
+@Service
+public interface RoleRepository {
+    Role createRole(CriarRoleDto criarRoleDto);
+    List<Role> getAllRoles();
 }
