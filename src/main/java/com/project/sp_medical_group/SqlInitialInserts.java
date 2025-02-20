@@ -25,6 +25,12 @@ public class SqlInitialInserts{
                 jdbcTemplate.execute("INSERT INTO tb_roles VALUES ('MEDICO')");
                 jdbcTemplate.execute("INSERT INTO tb_roles VALUES ('PACIENTE')");
 
+                jdbcTemplate.execute("INSERT INTO tb_convenios VALUES ('UNIMED')");
+                jdbcTemplate.execute("INSERT INTO tb_convenios VALUES ('AMIL')");
+                jdbcTemplate.execute("INSERT INTO tb_convenios VALUES ('BRADESCO')");
+                jdbcTemplate.execute("INSERT INTO tb_convenios VALUES ('SULAMERICA')");
+                jdbcTemplate.execute("INSERT INTO tb_convenios VALUES ('GOLDEN CROSS')");
+
                 System.out.println("✅ Dados iniciais inseridos no banco de dados com sucesso!");
             }
             catch (Exception e) {
