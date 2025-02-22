@@ -1,9 +1,6 @@
 package com.project.sp_medical_group.Controllers;
 
-import com.project.sp_medical_group.Dto.CriarClinicaComEnderecoDto;
-import com.project.sp_medical_group.Dto.CriarClinicaDto;
-import com.project.sp_medical_group.Dto.CriarEnderecoDto;
-import com.project.sp_medical_group.Jpa.Repositories.ClinicaJpaRepository;
+import com.project.sp_medical_group.Dto.CriarClinicaEnderecoDto;
 import com.project.sp_medical_group.Models.Clinica;
 import com.project.sp_medical_group.Services.ClinicaService;
 import jakarta.validation.Valid;
@@ -30,10 +27,10 @@ public class ClinicaController {
     }
 
     @PostMapping("/createClinica")
-    public ResponseEntity<String> createClinica(@RequestBody @Valid CriarClinicaComEnderecoDto criarClinicaComEnderecoDto) {
-//        System.out.println(criarClinicaComEnderecoDto);
+    public ResponseEntity<String> createClinica(@RequestBody @Valid CriarClinicaEnderecoDto criarClinicaEnderecoDto) {
+//        System.out.println(criarClinicaEnderecoDto);
 //        return ResponseEntity.ok("ok");
-        clinicaService.createClinica(criarClinicaComEnderecoDto);
+        clinicaService.createClinica(criarClinicaEnderecoDto);
         return ResponseEntity.ok("Clinica adicionada com sucesso!");
     }
 }
