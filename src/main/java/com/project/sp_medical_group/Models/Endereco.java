@@ -37,6 +37,10 @@ public class Endereco {
     @JsonIgnore
     private Clinica clinica;
 
+    @OneToOne(mappedBy = "endereco")
+    @JsonIgnore
+    private Pessoa pessoa;
+
     public Integer getEnderecoId() {
         return enderecoId;
     }
