@@ -4,31 +4,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sp_medical_group.Dto.CriarUsuarioDto;
 import com.project.sp_medical_group.Enum.Role;
 import com.project.sp_medical_group.Handler.BusinessException;
-import com.project.sp_medical_group.Jpa.Repositories.UsuarioJpaRepository;
 import com.project.sp_medical_group.Models.Usuario;
+import com.project.sp_medical_group.ReactiveCrudRepository.UsuarioReactiveCrudRepository;
 import com.project.sp_medical_group.Repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class UsuarioService implements UsuarioRepository {
-    private final UsuarioJpaRepository usuarioJpaRepository;
+    private final UsuarioReactiveCrudRepository usuarioReactiveCrudRepository;
 
     @Autowired
-    public UsuarioService(UsuarioJpaRepository usuarioJpaRepository) {
-        this.usuarioJpaRepository = usuarioJpaRepository;
+    public UsuarioService(UsuarioReactiveCrudRepository usuarioReactiveCrudRepository) {
+        this.usuarioReactiveCrudRepository = usuarioReactiveCrudRepository;
     }
 
     @Override
-    public Usuario createUsuario(CriarUsuarioDto criarUsuarioDto, Role role) {
+    public Mono<Usuario> createUsuario(CriarUsuarioDto criarUsuarioDto, Role role) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Usuario usuario = objectMapper.convertValue(criarUsuarioDto, Usuario.class);
-            usuario.setRole(role);
-            return usuarioJpaRepository.save(usuario);
+            usuario.setRoleName(role);
+            return usuarioReactiveCrudRepository.save(usuario);
         }
         catch (IllegalArgumentException e) {
             throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
@@ -39,7 +39,7 @@ public class UsuarioService implements UsuarioRepository {
     }
 
     @Override
-    public List<Usuario> getAllUsuarios() {
-        return usuarioJpaRepository.findAll();
+    public Flux<Usuario> getAllUsuarios() {
+        return usuarioReactiveCrudRepository.findAll();
     }
 }

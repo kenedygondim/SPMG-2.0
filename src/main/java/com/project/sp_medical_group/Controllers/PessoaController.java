@@ -7,8 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/spmg/pessoas")
@@ -21,8 +20,8 @@ public class PessoaController {
     }
 
     @GetMapping("/getAllPessoas")
-    public ResponseEntity<List<Pessoa>> getAllPessoas() {
-        List<Pessoa> pessoas = pessoaService.getAllPessoas();
+    public ResponseEntity<Flux<Pessoa>> getAllPessoas() {
+        Flux<Pessoa> pessoas = pessoaService.getAllPessoas();
         return ResponseEntity.ok(pessoas);
     }
 

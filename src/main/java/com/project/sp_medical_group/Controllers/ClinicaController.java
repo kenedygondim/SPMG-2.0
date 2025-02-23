@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -21,15 +22,13 @@ public class ClinicaController {
     }
 
     @GetMapping("/getAllClinicas")
-    public ResponseEntity<List<Clinica>> getAllClinicas() {
-        List<Clinica> clinicas = clinicaService.getAllClinicas();
+    public ResponseEntity<Flux<Clinica>> getAllClinicas() {
+        Flux<Clinica> clinicas = clinicaService.getAllClinicas();
         return ResponseEntity.ok(clinicas);
     }
 
     @PostMapping("/createClinica")
     public ResponseEntity<String> createClinica(@RequestBody @Valid CriarClinicaEnderecoDto criarClinicaEnderecoDto) {
-//        System.out.println(criarClinicaEnderecoDto);
-//        return ResponseEntity.ok("ok");
         clinicaService.createClinica(criarClinicaEnderecoDto);
         return ResponseEntity.ok("Clinica adicionada com sucesso!");
     }

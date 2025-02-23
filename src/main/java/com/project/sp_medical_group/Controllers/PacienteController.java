@@ -7,8 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/spmg/pacientes")
@@ -21,16 +21,13 @@ public class PacienteController {
     }
 
     @GetMapping("/getAllPacientes")
-    public ResponseEntity<List<Paciente>> getAllPacientes() {
-        List<Paciente> pacientes = pacienteService.getAllPacientes();
+    public ResponseEntity<Flux<Paciente>> getAllPacientes() {
+        Flux<Paciente> pacientes = pacienteService.getAllPacientes();
         return ResponseEntity.ok(pacientes);
     }
 
     @PostMapping("/createPaciente")
     public ResponseEntity<String> createPaciente(@RequestBody @Valid CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
-
-        System.out.println(criarPessoaUsuarioEnderecoDto);
-
         pacienteService.createPaciente(criarPessoaUsuarioEnderecoDto);
         return ResponseEntity.ok("Paciente adicionado com sucesso!");
     }

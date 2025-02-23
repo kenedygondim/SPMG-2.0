@@ -3,40 +3,42 @@ package com.project.sp_medical_group.Services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sp_medical_group.Dto.CriarClinicaEnderecoDto;
 import com.project.sp_medical_group.Handler.BusinessException;
-import com.project.sp_medical_group.Jpa.Repositories.ClinicaJpaRepository;
 import com.project.sp_medical_group.Models.Clinica;
 import com.project.sp_medical_group.Models.Endereco;
+import com.project.sp_medical_group.ReactiveCrudRepository.ClinicaReactiveCrudRepository;
 import com.project.sp_medical_group.Repositories.ClinicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class ClinicaService implements ClinicaRepository {
-    private final ClinicaJpaRepository clinicaJpaRepository;
+    private final ClinicaReactiveCrudRepository clinicaReactiveCrudRepository;
     private final EnderecoService enderecoService;
 
     @Autowired
-    public ClinicaService(ClinicaJpaRepository clinicaJpaRepository, EnderecoService enderecoService) {
-        this.clinicaJpaRepository = clinicaJpaRepository;
+    public ClinicaService(ClinicaReactiveCrudRepository clinicaReactiveCrudRepository, EnderecoService enderecoService) {
+        this.clinicaReactiveCrudRepository = clinicaReactiveCrudRepository;
         this.enderecoService = enderecoService;
     }
 
     @Override
-    public List<Clinica> getAllClinicas() {
-        return clinicaJpaRepository.findAll();
+    public Flux<Clinica> getAllClinicas() {
+        return clinicaReactiveCrudRepository.findAll();
     }
 
     @Override
-    public Clinica createClinica(CriarClinicaEnderecoDto criarClinicaEnderecoDto) {
+    public Mono<Clinica> createClinica(CriarClinicaEnderecoDto criarClinicaEnderecoDto) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Clinica clinica = objectMapper.convertValue(criarClinicaEnderecoDto.clinica(), Clinica.class);
-            Endereco endereco = enderecoService.createEndereco(criarClinicaEnderecoDto.endereco());
-            clinica.setEndereco(endereco);
-            return clinicaJpaRepository.save(clinica);
+            return enderecoService.createEndereco(criarClinicaEnderecoDto.endereco())
+                    .flatMap(enderecoCriado -> {
+                        clinica.setEnderecoId(enderecoCriado.getEnderecoId());
+                        return clinicaReactiveCrudRepository.save(clinica);
+                    });
         }
         catch (IllegalArgumentException e) {
             throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());

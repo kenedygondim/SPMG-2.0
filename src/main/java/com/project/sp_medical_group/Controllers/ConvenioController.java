@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -24,14 +26,15 @@ public class ConvenioController {
     }
 
     @PostMapping("/createConvenio")
-    public ResponseEntity<String> createConvenio(@RequestBody @Valid CriarConvenioDto criarConvenioDto) {
-        convenioService.createConvenio(criarConvenioDto);
-        return ResponseEntity.ok("Convenio adicionado com sucesso!");
+    public Mono<ResponseEntity<String>> createConvenio(@RequestBody @Valid CriarConvenioDto criarConvenioDto) {
+        return convenioService.createConvenio(criarConvenioDto)
+        .map(convenio -> ResponseEntity.ok("Convenio adicionado com sucesso!"))
+        .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().body(e.getMessage())));
     }
 
     @GetMapping("/getAllConvenios")
-    public ResponseEntity<List<Convenio>> getAllConvenios() {
-        List<Convenio> convenios = convenioService.getAllConvenios();
+    public ResponseEntity<Flux<Convenio>> getAllConvenios() {
+        Flux<Convenio> convenios = convenioService.getAllConvenios();
         return ResponseEntity.ok(convenios);
     }
 }

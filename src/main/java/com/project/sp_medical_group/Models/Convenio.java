@@ -1,27 +1,25 @@
 package com.project.sp_medical_group.Models;
 
-import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "tb_convenios")
+@Getter
+@NoArgsConstructor
 public class Convenio {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "convenio_id")
-    private int convenioId;
-
-    @Column(name = "convenio_nome")
-    private String convenioNome;
-
-    public int getConvenioId() {
-        return convenioId;
-    }
-
-    public String getConvenioNome() {
-        return convenioNome;
-    }
-
-    public void setConvenioNome(String convenioNome) {
+    public Convenio (String convenioNome) {
         this.convenioNome = convenioNome;
     }
+
+    @Id
+    @Column("convenio_id")
+    private int convenioId;
+
+    @Column("convenio_nome")
+    @Setter
+    private String convenioNome;
 }

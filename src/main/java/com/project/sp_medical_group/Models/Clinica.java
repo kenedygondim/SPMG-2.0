@@ -1,55 +1,34 @@
 package com.project.sp_medical_group.Models;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "tb_clinicas")
+@Getter
+@Setter
 public class Clinica {
     @Id
-    @Column(name = "cnpj")
+    @Column("cnpj")
     private String cnpj;
 
-    @Column(name = "nome_fantasia")
+    @Column("nome_fantasia")
     private String nomeFantasia;
 
-    @Column(name = "razao_social")
+    @Column("razao_social")
     private String razaoSocial;
 
-    @OneToOne
-    @JoinColumn(name = "endereco_id", referencedColumnName = "endereco_id")
-    private Endereco endereco;
+    @Column("endereco_id")
+    private Integer enderecoId;
 
-    public String getCnpj() {
-        return cnpj;
+    public Integer getEnderecoId() {
+        return enderecoId;
     }
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+    public void setEnderecoId(Integer enderecoId) {
+        this.enderecoId = enderecoId;
     }
 
-    public String getNomeFantasia() {
-        return nomeFantasia;
-    }
-
-    public void setNomeFantasia(String nomeFantasia) {
-        this.nomeFantasia = nomeFantasia;
-    }
-
-    public String getRazaoSocial() {
-        return razaoSocial;
-    }
-
-    public void setRazaoSocial(String razaoSocial) {
-        this.razaoSocial = razaoSocial;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
 }

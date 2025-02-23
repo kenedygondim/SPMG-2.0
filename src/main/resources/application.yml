@@ -3,17 +3,17 @@ server:
 spring:
   application:
     name: sp-medical-group
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: none
-    database-platform: org.hibernate.dialect.SQLServerDialect
   flyway:
     enabled: true
     locations: classpath:db/migration
-  datasource:
-      url: jdbc:sqlserver://localhost:1433;databaseName=DB_SPMG;integratedSecurity=true;encrypt=true;trustServerCertificate=true;
-      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  r2dbc:
+      url: r2dbc:pool:sqlserver://localhost:1433
+      database: DB_SPMG
+      username: USER
+      password: Senha123!
   profiles:
     active: test
-
+logging:
+  level:
+    io.r2dbc: DEBUG
+    org.springframework.r2dbc: DEBUG

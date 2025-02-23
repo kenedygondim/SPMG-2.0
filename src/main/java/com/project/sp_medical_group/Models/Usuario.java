@@ -2,83 +2,46 @@ package com.project.sp_medical_group.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.sp_medical_group.Enum.Role;
-import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 
-@Entity
 @Table(name = "tb_usuarios")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Usuario {
-    public Usuario () { }
-
     public Usuario (String email, String senha, Role roleName) {
         this.email = email;
         this.senha = senha;
-        this.roleName = roleName;
+        this.roleName = roleName.getValor();
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer usuario_id;
+    @Getter
+    @Column("usuario_id")
+    private Integer usuarioId;
 
-    @Column(name = "email")
+    @Column("email")
     private String email;
 
-    @Column(name = "senha")
+    @Column("senha")
     private String senha;
 
-    @Column(name = "foto_perfil_url")
-    private String fotoPerfil;
+    @Column("foto_perfil_url")
+    private String fotoPerfilUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role_name")
-    private Role roleName;
+    @Column("role_name")
+    private String roleName;
 
-//    @OneToOne(mappedBy = "usuario")
-//    @JsonIgnore
-//    private Medico medico;
-
-    @OneToOne(mappedBy = "usuario")
-    @JsonIgnore
-    private Paciente paciente;
-
-    public Integer getUsuario_id() {
-        return usuario_id;
+    public Role getRoleName() {
+        return Role.fromValor(roleName);
     }
-
-    public void setUsuario_id(Integer usuario_id) {
-        this.usuario_id = usuario_id;
+    public void setRoleName(Role roleName) {
+        this.roleName = roleName.getValor();
     }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFotoPerfil() {
-        return fotoPerfil;
-    }
-
-    public void setFotoPerfil(String fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
-    }
-
-    public Role getRole() {
-        return roleName;
-    }
-
-    public void setRole(Role roleName) {
-        this.roleName = roleName;
-    }
-
 }

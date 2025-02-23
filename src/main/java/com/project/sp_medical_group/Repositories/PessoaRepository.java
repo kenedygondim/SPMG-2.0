@@ -3,10 +3,10 @@ package com.project.sp_medical_group.Repositories;
 import com.project.sp_medical_group.Dto.CriarPessoaDto;
 import com.project.sp_medical_group.Models.Endereco;
 import com.project.sp_medical_group.Models.Pessoa;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface PessoaRepository {
-    List<Pessoa> getAllPessoas();
-    Pessoa createPessoa(CriarPessoaDto criarPessoaDto, Endereco endereco);
+    Flux<Pessoa> getAllPessoas();
+    Mono<Pessoa> createPessoa(CriarPessoaDto criarPessoaDto, Integer enderecoId);
 }

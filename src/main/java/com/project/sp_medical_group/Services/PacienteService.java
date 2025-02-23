@@ -4,47 +4,50 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioEnderecoDto;
 import com.project.sp_medical_group.Enum.Role;
 import com.project.sp_medical_group.Handler.BusinessException;
-import com.project.sp_medical_group.Jpa.Repositories.PacienteJpaRepository;
-import com.project.sp_medical_group.Models.*;
+import com.project.sp_medical_group.Models.Paciente;
+import com.project.sp_medical_group.ReactiveCrudRepository.PacienteReactiveCrudRepository;
 import com.project.sp_medical_group.Repositories.PacienteRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class PacienteService implements PacienteRepository {
-    private final PacienteJpaRepository pacienteJpaRepository;
+    private final PacienteReactiveCrudRepository pacienteReactiveCrudRepository;
     private final PessoaService pessoaService;
     private final UsuarioService usuarioService;
     private final EnderecoService enderecoService;
 
     @Autowired
-    public PacienteService(PacienteJpaRepository pacienteJpaRepository, PessoaService pessoaService, UsuarioService usuarioService, EnderecoService enderecoService) {
-        this.pacienteJpaRepository = pacienteJpaRepository;
+    public PacienteService(PacienteReactiveCrudRepository pacienteReactiveCrudRepository, PessoaService pessoaService, UsuarioService usuarioService, EnderecoService enderecoService) {
+        this.pacienteReactiveCrudRepository = pacienteReactiveCrudRepository;
         this.pessoaService = pessoaService;
         this.usuarioService = usuarioService;
         this.enderecoService = enderecoService;
     }
 
     @Override
-    public List<Paciente> getAllPacientes() {
-        return pacienteJpaRepository.findAll();
+    public Flux<Paciente> getAllPacientes() {
+        return pacienteReactiveCrudRepository.findAll();
     }
 
-    @Override
     @Transactional
-    public Paciente createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
+    @Override
+    public Mono<Paciente> createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Endereco enderecoCriado = enderecoService.createEndereco(criarPessoaUsuarioEnderecoDto.endereco());
-            Pessoa pessoaCriada = pessoaService.createPessoa(criarPessoaUsuarioEnderecoDto.pessoa(), enderecoCriado);
-            Usuario usuarioCriado = usuarioService.createUsuario(criarPessoaUsuarioEnderecoDto.usuario(), Role.PACIENTE);
-            Paciente paciente = new Paciente(pessoaCriada.getCpf(), usuarioCriado);
 
-            return pacienteJpaRepository.save(paciente);
+            return enderecoService.createEndereco(criarPessoaUsuarioEnderecoDto.endereco())
+                    .flatMap(
+                            enderecoCriado -> pessoaService.createPessoa(criarPessoaUsuarioEnderecoDto.pessoa(), enderecoCriado.getEnderecoId())
+                    ).flatMap(
+                            pessoaCriada -> usuarioService.createUsuario(criarPessoaUsuarioEnderecoDto.usuario(), Role.PACIENTE)
+                    ).flatMap(
+                            usuarioCriado -> pacienteReactiveCrudRepository.save(new Paciente(criarPessoaUsuarioEnderecoDto.pessoa().cpf(), usuarioCriado.getUsuarioId()))
+                    );
         }
         catch (IllegalArgumentException e) {
             throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
