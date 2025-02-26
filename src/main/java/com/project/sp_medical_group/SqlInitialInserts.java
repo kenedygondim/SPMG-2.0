@@ -27,7 +27,6 @@ public class SqlInitialInserts {
                     success -> System.out.println("✅ Dados iniciais inseridos no banco de dados com sucesso!"),
                     error -> {
                         System.err.println("❌ Falha ao inserir dados iniciais no banco de dados!");
-                        error.printStackTrace();
                     }
                 );
         };
