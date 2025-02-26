@@ -4,15 +4,19 @@ import com.project.sp_medical_group.Dto.CriarClinicaEnderecoDto;
 import com.project.sp_medical_group.Models.Clinica;
 import com.project.sp_medical_group.Services.ClinicaService;
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/spmg/clinicas")
+@Validated
 public class ClinicaController {
     private final ClinicaService clinicaService;
 
@@ -22,14 +26,13 @@ public class ClinicaController {
     }
 
     @GetMapping("/getAllClinicas")
-    public ResponseEntity<Flux<Clinica>> getAllClinicas() {
-        Flux<Clinica> clinicas = clinicaService.getAllClinicas();
-        return ResponseEntity.ok(clinicas);
+    public Mono<ResponseEntity<Flux<Clinica>>> getAllClinicas() {
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(clinicaService.getAllClinicas()));
     }
 
     @PostMapping("/createClinica")
-    public ResponseEntity<String> createClinica(@RequestBody @Valid CriarClinicaEnderecoDto criarClinicaEnderecoDto) {
-        clinicaService.createClinica(criarClinicaEnderecoDto);
-        return ResponseEntity.ok("Clinica adicionada com sucesso!");
+    public Mono<ResponseEntity<String>> createClinica(@RequestBody @Valid CriarClinicaEnderecoDto criarClinicaEnderecoDto) {
+        return clinicaService.createClinica(criarClinicaEnderecoDto)
+            .map(clinicaSalva -> ResponseEntity.status(HttpStatus.CREATED).body("Clínica criada com sucesso"));
     }
 }

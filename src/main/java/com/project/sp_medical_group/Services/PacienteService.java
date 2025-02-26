@@ -1,6 +1,5 @@
 package com.project.sp_medical_group.Services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioEnderecoDto;
 import com.project.sp_medical_group.Enum.Role;
 import com.project.sp_medical_group.Handler.BusinessException;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -36,24 +36,29 @@ public class PacienteService implements PacienteRepository {
 
     @Transactional
     @Override
-    public Mono<Paciente> createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-
+    public Mono<String> createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
+        try { //TODO: Consertar esse método. Só está sendo criado Pessoa e Endereço
+            System.out.println("-----------------------------------");
+            System.out.println("OPERAÇÃO INICIADA - CRIAR PACIENTE");
             return enderecoService.createEndereco(criarPessoaUsuarioEnderecoDto.endereco())
-                    .flatMap(
-                            enderecoCriado -> pessoaService.createPessoa(criarPessoaUsuarioEnderecoDto.pessoa(), enderecoCriado.getEnderecoId())
-                    ).flatMap(
-                            pessoaCriada -> usuarioService.createUsuario(criarPessoaUsuarioEnderecoDto.usuario(), Role.PACIENTE)
-                    ).flatMap(
-                            usuarioCriado -> pacienteReactiveCrudRepository.save(new Paciente(criarPessoaUsuarioEnderecoDto.pessoa().cpf(), usuarioCriado.getUsuarioId()))
-                    );
+                    .flatMap(enderecoCriado -> pessoaService.createPessoa(criarPessoaUsuarioEnderecoDto.pessoa(), enderecoCriado.getEnderecoId())
+                        .flatMap(pessoaCriada -> usuarioService.createUsuario(criarPessoaUsuarioEnderecoDto.usuario(), Role.PACIENTE)
+                            .flatMap(usuarioCriado -> pacienteReactiveCrudRepository.insertPaciente(criarPessoaUsuarioEnderecoDto.pessoa().cpf(), usuarioCriado.getUsuarioId())))
+                    )
+                    .thenReturn("Paciente criado com sucesso!");
         }
         catch (IllegalArgumentException e) {
             throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
         }
         catch (DataIntegrityViolationException e) {
             throw new BusinessException("Já existe uma pessoa cadastrada com esse CPF ou RG: " + e.getMessage());
+        }
+        catch (Exception e) {
+            throw new BusinessException("Erro ao criar paciente: " + e.getMessage());
+        }
+        finally {
+            System.out.println("OPERAÇÃO FINALIZADA - CRIAR PACIENTE");
+            System.out.println("-----------------------------------");
         }
     }
 }

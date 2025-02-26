@@ -5,9 +5,11 @@ import com.project.sp_medical_group.Models.Paciente;
 import com.project.sp_medical_group.Services.PacienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -21,14 +23,15 @@ public class PacienteController {
     }
 
     @GetMapping("/getAllPacientes")
-    public ResponseEntity<Flux<Paciente>> getAllPacientes() {
-        Flux<Paciente> pacientes = pacienteService.getAllPacientes();
-        return ResponseEntity.ok(pacientes);
+    public Mono<ResponseEntity<Flux<Paciente>>> getAllPacientes() {
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(pacienteService.getAllPacientes()));
     }
 
     @PostMapping("/createPaciente")
-    public ResponseEntity<String> createPaciente(@RequestBody @Valid CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
-        pacienteService.createPaciente(criarPessoaUsuarioEnderecoDto);
-        return ResponseEntity.ok("Paciente adicionado com sucesso!");
+    public Mono<ResponseEntity<String>> createPaciente(@RequestBody @Valid CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
+        return pacienteService.createPaciente(criarPessoaUsuarioEnderecoDto)
+        .map(paciente -> ResponseEntity.status(HttpStatus.CREATED)
+                            .body("Paciente adicionado com sucesso!")
+        );
     }
 }
