@@ -5,15 +5,15 @@ spring:
     name: sp-medical-group
   flyway:
     enabled: true
+    url: jdbc:sqlserver://localhost:1433;databaseName=DB_SPMG;encrypt=false;trustServerCertificate=true;
+    user: USER
+    password: Senha123!
     locations: classpath:db/migration
   r2dbc:
       url: r2dbc:pool:sqlserver://localhost:1433
       database: DB_SPMG
       username: USER
       password: Senha123!
-  profiles:
-    active: test
 logging:
   level:
-    io.r2dbc: DEBUG
     org.springframework.r2dbc: DEBUG
