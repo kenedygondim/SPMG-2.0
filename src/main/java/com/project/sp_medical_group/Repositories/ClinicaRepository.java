@@ -7,5 +7,5 @@ import reactor.core.publisher.Mono;
 
 public interface ClinicaRepository {
     Flux<Clinica> getAllClinicas();
-    Mono<Clinica> createClinica(CriarClinicaEnderecoDto criarClinicaEnderecoDto);
+    Mono<String> createClinica(CriarClinicaEnderecoDto criarClinicaEnderecoDto);
 }
