@@ -2,6 +2,8 @@ package com.project.sp_medical_group.Models;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -9,6 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table(name = "tb_pessoas")
 @Getter
 @Setter
+@ToString
 public class Pessoa {
     @Id
     private String cpf;
