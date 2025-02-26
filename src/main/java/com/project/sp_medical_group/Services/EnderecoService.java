@@ -29,5 +29,8 @@ public class EnderecoService implements EnderecoRepository {
         catch (IllegalArgumentException e) {
             throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
         }
+        catch (Exception e) {
+            throw new BusinessException("Erro ao criar endereço: " + e.getMessage());
+        }
     }
 }

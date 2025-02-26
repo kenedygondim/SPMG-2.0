@@ -36,6 +36,9 @@ public class UsuarioService implements UsuarioRepository {
         catch (DataIntegrityViolationException e) {
             throw new BusinessException("Ocorreu um erro de integridade dos dados. (Possível tentativa de quebra de CONSTRAINT) " + e.getMessage());
         }
+        catch (Exception e) {
+            throw new BusinessException("Erro ao criar usuário: " + e.getMessage());
+        }
     }
 
     @Override

@@ -6,6 +6,9 @@ import com.project.sp_medical_group.Handler.BusinessException;
 import com.project.sp_medical_group.Models.Convenio;
 import com.project.sp_medical_group.ReactiveCrudRepository.ConvenioReactiveCrudRepository;
 import com.project.sp_medical_group.Repositories.ConvenioRepository;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,7 @@ public class ConvenioService implements ConvenioRepository {
     }
 
     @Override
-    public Mono<Convenio> createConvenio(CriarConvenioDto criarConvenioDto) {
+    public Mono<Convenio> createConvenio(@Valid CriarConvenioDto criarConvenioDto) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Convenio convenio = objectMapper.convertValue(criarConvenioDto, Convenio.class);
@@ -33,6 +36,9 @@ public class ConvenioService implements ConvenioRepository {
         }
         catch (DataIntegrityViolationException e) {
             throw new BusinessException("Já existe um convênio cadastrado com esse nome: " + e.getMessage());
+        }
+        catch (Exception e) {
+            throw new BusinessException("Erro ao criar convênio: " + e.getMessage());
         }
     }
 
