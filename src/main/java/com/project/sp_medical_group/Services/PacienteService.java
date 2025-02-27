@@ -37,9 +37,7 @@ public class PacienteService implements PacienteRepository {
     @Transactional
     @Override
     public Mono<String> createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
-        try { //TODO: Consertar esse método. Só está sendo criado Pessoa e Endereço
-            System.out.println("-----------------------------------");
-            System.out.println("OPERAÇÃO INICIADA - CRIAR PACIENTE");
+        try { 
             return enderecoService.createEndereco(criarPessoaUsuarioEnderecoDto.endereco())
                     .flatMap(enderecoCriado -> pessoaService.createPessoa(criarPessoaUsuarioEnderecoDto.pessoa(), enderecoCriado.getEnderecoId())
                         .flatMap(pessoaCriada -> usuarioService.createUsuario(criarPessoaUsuarioEnderecoDto.usuario(), Role.PACIENTE)
@@ -55,10 +53,6 @@ public class PacienteService implements PacienteRepository {
         }
         catch (Exception e) {
             throw new BusinessException("Erro ao criar paciente: " + e.getMessage());
-        }
-        finally {
-            System.out.println("OPERAÇÃO FINALIZADA - CRIAR PACIENTE");
-            System.out.println("-----------------------------------");
         }
     }
 }
