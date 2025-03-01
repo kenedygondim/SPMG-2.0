@@ -13,24 +13,19 @@ import reactor.core.publisher.Mono;
 @Service
 public class EnderecoService implements EnderecoRepository {
     private final EnderecoReactiveCrudRepository enderecoReactiveCrudRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public EnderecoService(EnderecoReactiveCrudRepository enderecoReactiveCrudRepository) {
+    public EnderecoService(EnderecoReactiveCrudRepository enderecoReactiveCrudRepository, ObjectMapper objectMapper) {
         this.enderecoReactiveCrudRepository = enderecoReactiveCrudRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public Mono<Endereco> createEndereco(CriarEnderecoDto criarEnderecoDto) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            Endereco endereco = objectMapper.convertValue(criarEnderecoDto, Endereco.class);
-            return enderecoReactiveCrudRepository.save(endereco);
-        }
-        catch (IllegalArgumentException e) {
-            throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
-        }
-        catch (Exception e) {
-            throw new BusinessException("Erro ao criar endereço: " + e.getMessage());
-        }
+        return Mono.fromCallable(() -> objectMapper.convertValue(criarEnderecoDto, Endereco.class))
+                .onErrorMap(IllegalArgumentException.class, e -> new BusinessException("Erro ao criar converter Dto, verifique os dados enviados: " + e.getMessage()))
+                .flatMap(endereco -> enderecoReactiveCrudRepository.save(endereco))
+                .onErrorMap(Exception.class, e -> new BusinessException("Erro ao criar endereço: " + e.getMessage()));
     }
 }

@@ -34,7 +34,6 @@ public class ClinicaService implements ClinicaRepository {
     @Override
     @Transactional
     public Mono<String> createClinica(CriarClinicaEnderecoDto criarClinicaEnderecoDto) {
-        try {
             return enderecoService.createEndereco(criarClinicaEnderecoDto.endereco())
                 .flatMap(enderecoCriado -> 
                     clinicaReactiveCrudRepository.insertClinica(criarClinicaEnderecoDto.clinica().cnpj(),
@@ -42,17 +41,9 @@ public class ClinicaService implements ClinicaRepository {
                                                                 criarClinicaEnderecoDto.clinica().razaoSocial(),
                                                                 enderecoCriado.getEnderecoId())
                 )
-                .thenReturn("Clínica criada com sucesso!");
-        }
-        catch (DuplicateKeyException e) {
-            throw new BusinessException("Já existe uma clínica cadastrado com esse CNPJ: " + e.getMessage());
-        } 
-        catch (DataIntegrityViolationException e) {
-            throw new BusinessException("Já existe uma clínica cadastrado com essa razão social ou nome fantasia: " + e.getMessage());
-        }
-        catch (Exception e) {
-            throw new BusinessException("Erro ao criar clínica: " + e.getMessage());
-        }
+                .thenReturn("Clínica criada com sucesso!")
+                .onErrorMap(DuplicateKeyException.class, e -> new BusinessException("Já existe uma clínica cadastrado com esse CNPJ: " + e.getMessage()))
+                .onErrorMap(DataIntegrityViolationException.class, e -> new BusinessException("Já existe uma clínica cadastrado com essa razão social ou nome fantasia: " + e.getMessage()))
+                .onErrorMap(Exception.class, e -> new BusinessException("Erro ao criar clínica: " + e.getMessage()));
     }
-
 }

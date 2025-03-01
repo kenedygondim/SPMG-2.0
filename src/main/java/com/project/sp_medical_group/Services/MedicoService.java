@@ -38,25 +38,13 @@ public class MedicoService implements MedicoRepository  {
     @Override
     @Transactional
     public Mono<String> createMedico(CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto) {
-        try { 
             return enderecoService.createEndereco(criarPessoaUsuarioMedicoEnderecoDto.endereco())
                     .flatMap(enderecoCriado -> pessoaService.createPessoa(criarPessoaUsuarioMedicoEnderecoDto.pessoa(), enderecoCriado.getEnderecoId())
                         .flatMap(pessoaCriada -> usuarioService.createUsuario(criarPessoaUsuarioMedicoEnderecoDto.usuario(), Role.MEDICO)
                             .flatMap(usuarioCriado -> medicoReactiveCrudRepository.insertMedico(criarPessoaUsuarioMedicoEnderecoDto.pessoa().cpf(), usuarioCriado.getUsuarioId(), criarPessoaUsuarioMedicoEnderecoDto.medico().crm())))
                     )
-                    .thenReturn("Médico criado com sucesso!");
+                    .thenReturn("Médico criado com sucesso!")
+                    .onErrorMap(DataIntegrityViolationException.class, e -> new BusinessException("Já existe uma pessoa cadastrada com esse CPF, RG ou Email: " + e.getMessage()))
+                    .onErrorMap(Exception.class, e -> new BusinessException("Erro ao criar médico: " + e.getMessage()));
         }
-        catch (IllegalArgumentException e) {
-            throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new BusinessException("Já existe uma pessoa cadastrada com esse CPF ou RG: " + e.getMessage());
-        }
-        catch (Exception e) {
-            throw new BusinessException("Erro ao criar médico: " + e.getMessage());
-        }
-        finally {
-            System.out.println("Método createMedico executado!");
-        }
-    }
 }

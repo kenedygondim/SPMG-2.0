@@ -18,28 +18,21 @@ import reactor.core.publisher.Mono;
 @Service
 public class ConvenioService implements ConvenioRepository {
     private final ConvenioReactiveCrudRepository convenioReactiveCrudRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ConvenioService(ConvenioReactiveCrudRepository convenioReactiveCrudRepository) {
+    public ConvenioService(ConvenioReactiveCrudRepository convenioReactiveCrudRepository, ObjectMapper objectMapper) {
         this.convenioReactiveCrudRepository = convenioReactiveCrudRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public Mono<Convenio> createConvenio(@Valid CriarConvenioDto criarConvenioDto) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            Convenio convenio = objectMapper.convertValue(criarConvenioDto, Convenio.class);
-            return convenioReactiveCrudRepository.save(convenio);
-        }
-        catch (IllegalArgumentException e) {
-            throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new BusinessException("Já existe um convênio cadastrado com esse nome: " + e.getMessage());
-        }
-        catch (Exception e) {
-            throw new BusinessException("Erro ao criar convênio: " + e.getMessage());
-        }
+        return Mono.fromCallable(() -> objectMapper.convertValue(criarConvenioDto, Convenio.class))
+                .onErrorMap(IllegalArgumentException.class, e -> new BusinessException("Erro ao criar converter Dto, verifique os dados enviados: " + e.getMessage()))
+                .flatMap(convenio -> convenioReactiveCrudRepository.save(convenio))
+                .onErrorMap(DataIntegrityViolationException.class, e -> new BusinessException("Já existe um convênio cadastrado com esse nome: " + e.getMessage()))
+                .onErrorMap(Exception.class, e -> new BusinessException("Erro ao criar convênio: " + e.getMessage()));
     }
 
     @Override

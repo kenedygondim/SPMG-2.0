@@ -37,22 +37,13 @@ public class PacienteService implements PacienteRepository {
     @Transactional
     @Override
     public Mono<String> createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
-        try { 
             return enderecoService.createEndereco(criarPessoaUsuarioEnderecoDto.endereco())
                     .flatMap(enderecoCriado -> pessoaService.createPessoa(criarPessoaUsuarioEnderecoDto.pessoa(), enderecoCriado.getEnderecoId())
                         .flatMap(pessoaCriada -> usuarioService.createUsuario(criarPessoaUsuarioEnderecoDto.usuario(), Role.PACIENTE)
                             .flatMap(usuarioCriado -> pacienteReactiveCrudRepository.insertPaciente(criarPessoaUsuarioEnderecoDto.pessoa().cpf(), usuarioCriado.getUsuarioId())))
                     )
-                    .thenReturn("Paciente criado com sucesso!");
-        }
-        catch (IllegalArgumentException e) {
-            throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new BusinessException("Já existe uma pessoa cadastrada com esse CPF ou RG: " + e.getMessage());
-        }
-        catch (Exception e) {
-            throw new BusinessException("Erro ao criar paciente: " + e.getMessage());
-        }
+                    .thenReturn("Paciente criado com sucesso!")
+                    .onErrorMap(DataIntegrityViolationException.class, e -> new BusinessException("Já existe uma pessoa cadastrada com esse CPF, RG ou Email: " + e.getMessage()))
+                    .onErrorMap(Exception.class, e -> new BusinessException("Erro ao criar paciente: " + e.getMessage()));
     }
 }
