@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.sp_medical_group.Dto.AssociarMedicoConvenioDto;
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioMedicoEnderecoDto;
 import com.project.sp_medical_group.Models.Medico;
 import com.project.sp_medical_group.Services.MedicoConvenioService;
@@ -41,13 +42,15 @@ public class MedicoController {
     public Mono<ResponseEntity<String>> createMedico(@RequestBody @Valid CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto) {
         return medicoService.createMedico(criarPessoaUsuarioMedicoEnderecoDto)
         .map(paciente -> ResponseEntity.status(HttpStatus.CREATED)
-                            .body("Médico adicionado com sucesso!")
+            .body("Médico adicionado com sucesso!")
         );
     }
 
-    // @PostMapping("/associateMedicoConvenio")
-    // public Mono<ResponseEntity<String>> associarConvenio(@RequestBody @Valid ) {
-    //     return medicoService.associateMedicoConvenio()
-        
-    // }
+    @PostMapping("/associateMedicoConvenio")
+    public Mono<ResponseEntity<String>> associarConvenio(@RequestBody @Valid AssociarMedicoConvenioDto associarMedicoConvenioDto) {
+        return medicoConvenioService.associateMedicoConvenio(associarMedicoConvenioDto)
+        .map(paciente -> ResponseEntity.status(HttpStatus.CREATED)
+            .body("Convênio associado ao médico com sucesso!")
+        );
+    }
 }

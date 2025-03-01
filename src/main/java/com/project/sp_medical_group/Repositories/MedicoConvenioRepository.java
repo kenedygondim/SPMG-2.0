@@ -1,7 +1,9 @@
 package com.project.sp_medical_group.Repositories;
 
+import com.project.sp_medical_group.Dto.AssociarMedicoConvenioDto;
+
 import reactor.core.publisher.Mono;
 
 public interface MedicoConvenioRepository {
-    Mono<Void> associateMedicoConvenio(String medicoCrm, Integer convenioId);
+    Mono<String> associateMedicoConvenio(AssociarMedicoConvenioDto associarMedicoConvenioDto);
 }
