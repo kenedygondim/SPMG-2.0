@@ -1,7 +1,7 @@
 package com.project.sp_medical_group.Controllers;
 
 import com.project.sp_medical_group.Models.Pessoa;
-import com.project.sp_medical_group.Services.PessoaService;
+import com.project.sp_medical_group.Repositories.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,16 +12,16 @@ import reactor.core.publisher.Flux;
 @RestController
 @RequestMapping("/spmg/pessoas")
 public class PessoaController {
-    private final PessoaService pessoaService;
+    private final PessoaRepository pessoaRepository;
 
     @Autowired
-    public PessoaController(PessoaService pessoaService) {
-        this.pessoaService = pessoaService;
+    public PessoaController(PessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
     }
 
     @GetMapping("/getAllPessoas")
     public ResponseEntity<Flux<Pessoa>> getAllPessoas() {
-        Flux<Pessoa> pessoas = pessoaService.getAllPessoas();
+        Flux<Pessoa> pessoas = pessoaRepository.getAllPessoas();
         return ResponseEntity.ok(pessoas);
     }
 

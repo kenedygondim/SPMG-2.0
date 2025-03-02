@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.sp_medical_group.Dto.AssociarMedicoConvenioDto;
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioMedicoEnderecoDto;
 import com.project.sp_medical_group.Models.Medico;
-import com.project.sp_medical_group.Services.MedicoConvenioService;
-import com.project.sp_medical_group.Services.MedicoService;
+import com.project.sp_medical_group.Repositories.MedicoConvenioRepository;
+import com.project.sp_medical_group.Repositories.MedicoRepository;
 
 import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
@@ -24,23 +24,23 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/spmg/medicos")
 @Validated
 public class MedicoController {
-    private final MedicoService medicoService;
-    private final MedicoConvenioService medicoConvenioService;
+    private final MedicoRepository medicoRepository;
+    private final MedicoConvenioRepository medicoConvenioRepository;
 
     @Autowired
-    public MedicoController(MedicoService medicoService, MedicoConvenioService medicoConvenioService) {
-        this.medicoService = medicoService;
-        this.medicoConvenioService = medicoConvenioService;
+    public MedicoController(MedicoRepository medicoRepository, MedicoConvenioRepository medicoConvenioRepository) {
+        this.medicoRepository = medicoRepository;
+        this.medicoConvenioRepository = medicoConvenioRepository;
     }
 
     @GetMapping("/getAllMedicos")
     public Mono<ResponseEntity<Flux<Medico>>> getAllMedicos() {
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(medicoService.getAllMedicos()));
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(medicoRepository.getAllMedicos()));
     }
 
     @PostMapping("/createMedico")
     public Mono<ResponseEntity<String>> createMedico(@RequestBody @Valid CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto) {
-        return medicoService.createMedico(criarPessoaUsuarioMedicoEnderecoDto)
+        return medicoRepository.createMedico(criarPessoaUsuarioMedicoEnderecoDto)
         .map(paciente -> ResponseEntity.status(HttpStatus.CREATED)
             .body("Médico adicionado com sucesso!")
         );
@@ -48,9 +48,11 @@ public class MedicoController {
 
     @PostMapping("/associateMedicoConvenio")
     public Mono<ResponseEntity<String>> associarConvenio(@RequestBody @Valid AssociarMedicoConvenioDto associarMedicoConvenioDto) {
-        return medicoConvenioService.associateMedicoConvenio(associarMedicoConvenioDto)
+        return medicoConvenioRepository.associateMedicoConvenio(associarMedicoConvenioDto)
         .map(paciente -> ResponseEntity.status(HttpStatus.CREATED)
             .body("Convênio associado ao médico com sucesso!")
         );
     }
+
+
 }

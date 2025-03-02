@@ -2,7 +2,7 @@ package com.project.sp_medical_group.Controllers;
 
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioEnderecoDto;
 import com.project.sp_medical_group.Models.Paciente;
-import com.project.sp_medical_group.Services.PacienteService;
+import com.project.sp_medical_group.Repositories.PacienteRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,21 +15,21 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/spmg/pacientes")
 public class PacienteController {
-    private final PacienteService pacienteService;
+    private final PacienteRepository pacienteRepository;
 
     @Autowired
-    public PacienteController(PacienteService pacienteService) {
-        this.pacienteService = pacienteService;
+    public PacienteController(PacienteRepository pacienteRepository) {
+        this.pacienteRepository = pacienteRepository;
     }
 
     @GetMapping("/getAllPacientes")
     public Mono<ResponseEntity<Flux<Paciente>>> getAllPacientes() {
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(pacienteService.getAllPacientes()));
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(pacienteRepository.getAllPacientes()));
     }
 
     @PostMapping("/createPaciente")
     public Mono<ResponseEntity<String>> createPaciente(@RequestBody @Valid CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto) {
-        return pacienteService.createPaciente(criarPessoaUsuarioEnderecoDto)
+        return pacienteRepository.createPaciente(criarPessoaUsuarioEnderecoDto)
         .map(paciente -> ResponseEntity.status(HttpStatus.CREATED)
                             .body("Paciente adicionado com sucesso!")
         );
