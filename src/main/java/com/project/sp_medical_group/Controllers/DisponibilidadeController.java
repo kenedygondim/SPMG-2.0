@@ -40,3 +40,6 @@ public class DisponibilidadeController {
         return Mono.just(ResponseEntity.status(HttpStatus.OK).body(disponibilidadeRepository.getAllDisponibilidadesByMedicoCpf(medicoCpf)));
     }
 }
+
+
+
