@@ -1,8 +1,11 @@
 package com.project.sp_medical_group.Controllers;
 
 import com.project.sp_medical_group.Dto.AssociarMedicoClinicaDto;
+import com.project.sp_medical_group.Dto.AvaliarClinicaDto;
 import com.project.sp_medical_group.Dto.CriarClinicaEnderecoDto;
+import com.project.sp_medical_group.Models.AvaliacaoClinica;
 import com.project.sp_medical_group.Models.Clinica;
+import com.project.sp_medical_group.Repositories.AvaliacaoClinicaRepository;
 import com.project.sp_medical_group.Repositories.ClinicaRepository;
 import com.project.sp_medical_group.Repositories.MedicoClinicaRepository;
 
@@ -23,11 +26,13 @@ import reactor.core.publisher.Mono;
 public class ClinicaController {
     private final ClinicaRepository clinicaRepository;
     private final MedicoClinicaRepository medicoClinicaRepository;
+    private final AvaliacaoClinicaRepository avaliacaoClinicaRepository;
 
     @Autowired
-    public ClinicaController(ClinicaRepository clinicaRepository, MedicoClinicaRepository medicoClinicaRepository) {
+    public ClinicaController(ClinicaRepository clinicaRepository, MedicoClinicaRepository medicoClinicaRepository, AvaliacaoClinicaRepository avaliacaoClinicaRepository) {
         this.clinicaRepository = clinicaRepository;
         this.medicoClinicaRepository = medicoClinicaRepository;
+        this.avaliacaoClinicaRepository = avaliacaoClinicaRepository;
     }
 
     @GetMapping("/getAllClinicas")
@@ -49,4 +54,11 @@ public class ClinicaController {
         );
     }
 
+    @PostMapping("/addAvaliacaoClinica")
+    public Mono<ResponseEntity<String>> addAvaliacaoClinica(@RequestBody @Valid AvaliarClinicaDto avaliarClinicaDto) {
+        return avaliacaoClinicaRepository.createAvaliacaoClinica(avaliarClinicaDto)
+            .map(avaliacao -> ResponseEntity.status(HttpStatus.CREATED)
+                .body("Avaliação clínica adicionada com sucesso!")
+            );
+    }
 }
