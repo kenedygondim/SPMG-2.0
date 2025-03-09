@@ -10,10 +10,13 @@ spring:
     password: Senha123!
     locations: classpath:db/migration
   r2dbc:
-      url: r2dbc:pool:sqlserver://localhost:1433
-      database: DB_SPMG
-      username: USER
-      password: Senha123!
+    url: r2dbc:pool:sqlserver://localhost:1433
+    database: DB_SPMG
+    username: USER
+    password: Senha123!
+  devtools:
+    restart:
+      enabled: true
 logging:
   level:
     org.springframework.r2dbc: DEBUG
