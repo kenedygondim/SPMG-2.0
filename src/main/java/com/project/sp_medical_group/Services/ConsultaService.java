@@ -2,6 +2,7 @@ package com.project.sp_medical_group.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sp_medical_group.Dto.AgendarConsultaDto;
@@ -43,5 +44,13 @@ public class ConsultaService implements ConsultaRepository {
     @Override
     public Flux<Consulta> getAllConsultasByPacienteCpf(String pacienteCpf) {
         return consultaReactiveCrudRepository.findAllByPacienteCpf(pacienteCpf);
+    }
+
+    @Override
+    @Transactional
+    public Mono<String> cancelConsulta(Integer consultaId) {
+        return consultaReactiveCrudRepository.deleteById(consultaId)
+        .thenReturn("Consulta cancelada com sucesso!")
+        .onErrorMap(Exception.class, error -> new BusinessException("Não foi possível cancelar a consulta"));
     }  
 }
