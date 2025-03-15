@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface AvaliacaoClinicaRepository {
-    Mono<AvaliacaoClinica> createAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto);
-    Flux<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaCnpj(String clinicaCnpj);
-    Flux<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteCpf(String pacienteCpf);
+    public abstract Mono<AvaliacaoClinica> createAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto);
+    public abstract Flux<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaCnpj(String clinicaCnpj);
+    public abstract Flux<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteCpf(String pacienteCpf);
 }

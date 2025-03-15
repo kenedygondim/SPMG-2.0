@@ -6,6 +6,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface PacienteRepository {
-    Flux<Paciente> getAllPacientes();
-    Mono<String> createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto);
+    public abstract Flux<Paciente> getAllPacientes();
+    public abstract Mono<String> createPaciente(CriarPessoaUsuarioEnderecoDto criarPessoaUsuarioEnderecoDto);
 }

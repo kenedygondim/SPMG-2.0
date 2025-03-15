@@ -7,6 +7,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface UsuarioRepository {
-    Mono<Usuario> createUsuario(CriarUsuarioDto criarUsuarioDto, Role role);
-    Flux<Usuario> getAllUsuarios();
+    public abstract Mono<Usuario> createUsuario(CriarUsuarioDto criarUsuarioDto, Role role);
+    public abstract Flux<Usuario> getAllUsuarios();
 }

@@ -7,6 +7,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface ConsultaRepository {
-    Mono<String> createConsulta(AgendarConsultaDto agendarConsultaDto);
-    Flux<Consulta> getAllConsultasByPacienteCpf(String pacienteCpf);
+    public abstract Mono<String> createConsulta(AgendarConsultaDto agendarConsultaDto);
+    public abstract Flux<Consulta> getAllConsultasByPacienteCpf(String pacienteCpf);
+    public abstract Mono<String> cancelConsulta(Integer consultaId);
 }

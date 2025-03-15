@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
 
 @Service
 public interface ConvenioRepository {
-    Mono<Convenio> createConvenio (CriarConvenioDto criarConvenioDto);
-    Flux<Convenio> getAllConvenios();
+    public abstract Mono<Convenio> createConvenio (CriarConvenioDto criarConvenioDto);
+    public abstract Flux<Convenio> getAllConvenios();
 }

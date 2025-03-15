@@ -5,5 +5,5 @@ import com.project.sp_medical_group.Models.Endereco;
 import reactor.core.publisher.Mono;
 
 public interface EnderecoRepository {
-    Mono<Endereco> createEndereco(CriarEnderecoDto criarEnderecoDto);
+    public abstract Mono<Endereco> createEndereco(CriarEnderecoDto criarEnderecoDto);
 }

@@ -7,6 +7,6 @@ import com.project.sp_medical_group.Dto.CriarDisponibilidadeDto;
 import com.project.sp_medical_group.Models.Disponibilidade;
 
 public interface DisponibilidadeRepository {
-    Mono<Disponibilidade> createDisponibilidade(CriarDisponibilidadeDto criarDisponibilidadeDto);
-    Flux<Disponibilidade> getAllDisponibilidadesByMedicoCpf(String medicoCpf);
+    public abstract Mono<Disponibilidade> createDisponibilidade(CriarDisponibilidadeDto criarDisponibilidadeDto);
+    public abstract Flux<Disponibilidade> getAllDisponibilidadesByMedicoCpf(String medicoCpf);
 }

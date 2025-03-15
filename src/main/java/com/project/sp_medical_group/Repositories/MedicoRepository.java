@@ -8,6 +8,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface MedicoRepository {
-    Flux<Medico> getAllMedicos();
-    Mono<String> createMedico(CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto);
+    public abstract Flux<Medico> getAllMedicos();
+    public abstract Mono<String> createMedico(CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto);
 }

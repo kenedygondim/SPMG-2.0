@@ -6,8 +6,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface EspecialidadeRepository {
-    Mono<Especialidade> createEspecialidade(CriarEspecialidadeDto criarEspecialidadeDto);
-    Flux<Especialidade> getAllEspecialidades();
+    public abstract Mono<Especialidade> createEspecialidade(CriarEspecialidadeDto criarEspecialidadeDto);
+    public abstract Flux<Especialidade> getAllEspecialidades();
 }
 
 
