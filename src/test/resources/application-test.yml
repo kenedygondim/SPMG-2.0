@@ -1,0 +1,19 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb
+    username: sa
+    password: sa
+
+  flyway:
+    enabled: true
+    url: r2dbc:h2:mem:testdb
+    user: sa
+    password: sa
+    locations: classpath:db-test/migration
+
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG
