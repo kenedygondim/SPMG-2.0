@@ -5,16 +5,18 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Getter;
+import lombok.Setter;
 
-@Table("tb_avaliacoes_clinica")
+@Table("tb_avaliacoes_medico")
 @Getter
-public class AvaliacaoClinica {
+@Setter
+public class AvaliacaoMedico {
     @Id
     @Column("avaliacao_id")
     private Integer avaliacaoId;
 
-    @Column("clinica_cnpj")
-    private String clinicaCnpj;
+    @Column("medico_cpf")
+    private String medicoCpf;
 
     @Column("paciente_cpf")
     private String pacienteCpf;

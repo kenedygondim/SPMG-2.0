@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.sp_medical_group.Dto.AssociarMedicoConvenioDto;
+import com.project.sp_medical_group.Dto.AvaliarMedicoDto;
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioMedicoEnderecoDto;
 import com.project.sp_medical_group.Models.Medico;
+import com.project.sp_medical_group.Repositories.AvaliacaoMedicoRepository;
 import com.project.sp_medical_group.Repositories.MedicoConvenioRepository;
 import com.project.sp_medical_group.Repositories.MedicoRepository;
 
@@ -26,11 +28,14 @@ import reactor.core.publisher.Mono;
 public class MedicoController {
     private final MedicoRepository medicoRepository;
     private final MedicoConvenioRepository medicoConvenioRepository;
+    private final AvaliacaoMedicoRepository avaliacaoMedicoRepository;
+
 
     @Autowired
-    public MedicoController(MedicoRepository medicoRepository, MedicoConvenioRepository medicoConvenioRepository) {
+    public MedicoController(MedicoRepository medicoRepository, MedicoConvenioRepository medicoConvenioRepository, AvaliacaoMedicoRepository avaliacaoMedicoRepository) {
         this.medicoRepository = medicoRepository;
         this.medicoConvenioRepository = medicoConvenioRepository;
+        this.avaliacaoMedicoRepository = avaliacaoMedicoRepository;
     }
 
     @GetMapping("/getAllMedicos")
@@ -54,5 +59,11 @@ public class MedicoController {
         );
     }
 
-
+    @PostMapping("/addAvaliacaoMedico")
+    public Mono<ResponseEntity<String>> addAvaliacaoMedico(@RequestBody @Valid AvaliarMedicoDto avaliarMedicoDto) {
+        return avaliacaoMedicoRepository.createAvaliacaoMedico(avaliarMedicoDto)
+            .map(avaliacao -> ResponseEntity.status(HttpStatus.CREATED)
+                .body("Avaliação do médico criada com sucesso!")
+            );
+    }
 }
