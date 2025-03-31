@@ -10,10 +10,23 @@ spring:
     database-platform: org.hibernate.dialect.SQLServerDialect
   flyway:
     enabled: true
+    url: jdbc:sqlserver://localhost:1433;databaseName=DB_SPMG;encrypt=false;trustServerCertificate=true;
+    user: USER
+    password: Senha123!
     locations: classpath:db/migration
   datasource:
-      url: jdbc:sqlserver://localhost:1433;databaseName=DB_SPMG;integratedSecurity=true;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://localhost:1433;databaseName=DB_SPMG;encrypt=true;trustServerCertificate=true;
+      username: USER
+      password: Senha123!
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   profiles:
     active: test
+  devtools:
+    restart:
+      enabled: true
+oracle:
+  cloud:
+    bucket:
+      name: sp-medical-group
+    namespace: sp-medical-group
 
