@@ -19,14 +19,9 @@ spring:
       username: USER
       password: Senha123!
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-  profiles:
-    active: test
   devtools:
     restart:
       enabled: true
-oracle:
-  cloud:
-    bucket:
-      name: sp-medical-group
-    namespace: sp-medical-group
+
+
 
