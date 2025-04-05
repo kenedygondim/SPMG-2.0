@@ -1,7 +1,8 @@
 package com.project.sp_medical_group.Controllers;
 
 import com.project.sp_medical_group.Models.Pessoa;
-import com.project.sp_medical_group.Services.PessoaService;
+import com.project.sp_medical_group.Repositories.PessoaRepository;
+import com.project.sp_medical_group.Services.Core.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +14,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/spmg/pessoas")
 public class PessoaController {
-    private final PessoaService pessoaService;
+    private final PessoaRepository pessoaRepository;
 
     @Autowired
-    public PessoaController(PessoaService pessoaService) {
-        this.pessoaService = pessoaService;
+    public PessoaController(PessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
     }
+
 
     @GetMapping("/getAllPessoas")
     public ResponseEntity<List<Pessoa>> getAllPessoas() {
-        List<Pessoa> pessoas = pessoaService.getAllPessoas();
+        List<Pessoa> pessoas = pessoaRepository.getAllPessoas();
         return ResponseEntity.ok(pessoas);
     }
 
