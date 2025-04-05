@@ -2,14 +2,32 @@ package com.project.sp_medical_group.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tb_enderecos")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Endereco {
+
+    public Endereco(String cep, String uf, String municipio, String bairro, String logradouro, String numero, String complemento) {
+        this.cep = cep;
+        this.uf = uf;
+        this.municipio = municipio;
+        this.bairro = bairro;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.complemento = complemento;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "endereco_id")
+    @Setter(AccessLevel.NONE)
     private Integer enderecoId;
 
     @Column(name = "cep")
@@ -40,76 +58,4 @@ public class Endereco {
     @OneToOne(mappedBy = "endereco")
     @JsonIgnore
     private Pessoa pessoa;
-
-    public Integer getEnderecoId() {
-        return enderecoId;
-    }
-
-    public void setEnderecoId(Integer enderecoId) {
-        this.enderecoId = enderecoId;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-
-    public String getMunicipio() {
-        return municipio;
-    }
-
-    public void setMunicipio(String municipio) {
-        this.municipio = municipio;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getLogradouro() {
-        return logradouro;
-    }
-
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-
-    public Clinica getClinica() {
-        return clinica;
-    }
-
-    public void setClinica(Clinica clinica) {
-        this.clinica = clinica;
-    }
 }

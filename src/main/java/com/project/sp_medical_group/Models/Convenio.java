@@ -1,9 +1,12 @@
 package com.project.sp_medical_group.Models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tb_convenios")
+@Getter
 public class Convenio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,17 +14,6 @@ public class Convenio {
     private int convenioId;
 
     @Column(name = "convenio_nome")
+    @Setter
     private String convenioNome;
-
-    public int getConvenioId() {
-        return convenioId;
-    }
-
-    public String getConvenioNome() {
-        return convenioNome;
-    }
-
-    public void setConvenioNome(String convenioNome) {
-        this.convenioNome = convenioNome;
-    }
 }
