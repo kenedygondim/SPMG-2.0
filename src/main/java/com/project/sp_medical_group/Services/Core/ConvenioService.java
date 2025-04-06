@@ -15,15 +15,16 @@ import java.util.List;
 @Service
 public class ConvenioService implements ConvenioRepository {
     private final ConvenioJpaRepository convenioJpaRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ConvenioService(ConvenioJpaRepository convenioJpaRepository) {
+    public ConvenioService(ConvenioJpaRepository convenioJpaRepository, ObjectMapper objectMapper) {
         this.convenioJpaRepository = convenioJpaRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public Convenio createConvenio(CriarConvenioDto criarConvenioDto) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             Convenio convenio = objectMapper.convertValue(criarConvenioDto, Convenio.class);
             return convenioJpaRepository.save(convenio);
