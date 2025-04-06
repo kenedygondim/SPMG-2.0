@@ -2,6 +2,7 @@ package com.project.sp_medical_group.Models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 //CREATE TABLE tb_medicos (
@@ -15,9 +16,17 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "tb_medicos")
+@NoArgsConstructor
 @Getter
 @Setter
 public class Medico {
+
+    public Medico (String cpf, String crm, Usuario usuario) {
+        this.cpf = cpf;
+        this.crm = crm;
+        this.usuario = usuario;
+    }
+
     @Id
     private String cpf;
 
