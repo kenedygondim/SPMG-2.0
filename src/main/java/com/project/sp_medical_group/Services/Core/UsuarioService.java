@@ -16,31 +16,25 @@ import java.util.List;
 @Service
 public class UsuarioService implements UsuarioRepository {
     private final UsuarioJpaRepository usuarioJpaRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public UsuarioService(UsuarioJpaRepository usuarioJpaRepository) {
+    public UsuarioService(UsuarioJpaRepository usuarioJpaRepository, ObjectMapper objectMapper) {
         this.usuarioJpaRepository = usuarioJpaRepository;
+        this.objectMapper = objectMapper;
     }
-
-//    @Override
-//    public Usuario createUsuario(CriarUsuarioDto criarUsuarioDto, Role role) {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            Usuario usuario = objectMapper.convertValue(criarUsuarioDto, Usuario.class);
-//            usuario.setRole(role);
-//            return usuarioJpaRepository.save(usuario);
-//        }
-//        catch (IllegalArgumentException e) {
-//            throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
-//        }
-//        catch (DataIntegrityViolationException e) {
-//            throw new BusinessException("Ocorreu um erro de integridade dos dados. (Possível tentativa de quebra de CONSTRAINT) " + e.getMessage());
-//        }
-//    }
 
     @Override
     public Usuario createUsuario(CriarUsuarioDto criarUsuarioDto, Role role) {
-        return null;
+        try {
+            Usuario usuario = objectMapper.convertValue(criarUsuarioDto, Usuario.class);
+            usuario.setRoleName(role);
+            return usuarioJpaRepository.save(usuario);
+        } catch (IllegalArgumentException e) {
+            throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException("Ocorreu um erro de integridade dos dados. (Possível tentativa de quebra de CONSTRAINT) " + e.getMessage());
+        }
     }
 
     @Override
