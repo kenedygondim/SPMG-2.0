@@ -30,8 +30,9 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "usuario_id")
     @Setter(AccessLevel.NONE)
-    private Integer usuario_id;
+    private Integer usuarioId;
 
     @Column(name = "email")
     private String email;
