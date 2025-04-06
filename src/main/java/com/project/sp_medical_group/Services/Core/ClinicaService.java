@@ -44,6 +44,9 @@ public class ClinicaService implements ClinicaRepository {
         catch (DataIntegrityViolationException e) {
             throw new BusinessException("Já existe uma clínica cadastrado com essa razão social ou nome fantasia: " + e.getMessage());
         }
+        catch (Exception e) {
+            throw new BusinessException("Erro ao criar clínica: " + e.getMessage());
+        }
     }
 
 }
