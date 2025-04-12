@@ -10,4 +10,5 @@ public interface AvaliacaoClinicaRepository {
     public abstract AvaliacaoClinica createAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto);
     public abstract List<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaCnpj(String clinicaCnpj);
     public abstract List<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteCpf(String pacienteCpf);
+    public abstract AvaliacaoClinica addAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto);
 }

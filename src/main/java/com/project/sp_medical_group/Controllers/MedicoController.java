@@ -1,7 +1,10 @@
 package com.project.sp_medical_group.Controllers;
 
+import com.project.sp_medical_group.Dto.AvaliarClinicaDto;
+import com.project.sp_medical_group.Dto.AvaliarMedicoDto;
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioMedicoEnderecoDto;
 import com.project.sp_medical_group.Models.Medico;
+import com.project.sp_medical_group.Repositories.AvaliacaoClinicaRepository;
 import com.project.sp_medical_group.Repositories.AvaliacaoMedicoRepository;
 import com.project.sp_medical_group.Repositories.MedicoConvenioRepository;
 import com.project.sp_medical_group.Repositories.MedicoRepository;
@@ -36,5 +39,11 @@ public class MedicoController {
     @PostMapping("/createMedico")
     public ResponseEntity<Medico> createMedico(@RequestBody @Valid CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto) {
         return ResponseEntity.status(201).body(medicoRepository.createMedico(criarPessoaUsuarioMedicoEnderecoDto));
+    }
+
+    @PostMapping("/addAvaliacaoMedico")
+    public ResponseEntity<String> addAvaliacaoMedico(@RequestBody @Valid AvaliarMedicoDto avaliarMedicoDto) {
+        avaliacaoMedicoRepository.addAvaliacaoMedico(avaliarMedicoDto);
+        return ResponseEntity.ok("Avaliação adicionada com sucesso!");
     }
 }
