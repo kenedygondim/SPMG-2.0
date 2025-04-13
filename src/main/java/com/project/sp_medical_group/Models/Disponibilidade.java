@@ -1,5 +1,7 @@
 package com.project.sp_medical_group.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +15,7 @@ import lombok.Setter;
 //CONSTRAINT fk_tb_disponibilidades_tb_medicos FOREIGN KEY (medico_cpf) REFERENCES tb_medicos (cpf)
 
 @Entity
-@Table(name = "tb_disponibilidade")
+@Table(name = "tb_disponibilidades")
 @Getter
 @Setter
 public class Disponibilidade {
@@ -23,7 +25,7 @@ public class Disponibilidade {
     private Integer disponibilidadeId;
 
     @Column(name = "data_disp")
-    private String dataDisponibilidade;
+    private String dataDisp;
 
     @Column(name = "hora_inicio")
     private String horaInicio;
@@ -32,6 +34,7 @@ public class Disponibilidade {
     private String horaFim;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "medico_cpf", referencedColumnName = "cpf")
     private Medico medico;
 }

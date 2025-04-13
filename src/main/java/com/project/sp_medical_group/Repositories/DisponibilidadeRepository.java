@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface DisponibilidadeRepository {
     public abstract Disponibilidade createDisponibilidade(CriarDisponibilidadeDto criarDisponibilidadeDto);
-    public abstract List<Disponibilidade> getAllDisponibilidadesByMedicoCpf(String medicoCpf);
+    public abstract List<Disponibilidade> getAllDisponibilidadesByMedicoCpfAndDataDisp(String medicoCpf, String dataDisp);
 }

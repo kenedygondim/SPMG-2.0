@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DisponibilidadeJpaRepository extends JpaRepository<Disponibilidade, Integer> {
-    List<Disponibilidade> findAllByMedicoCpf(String medicoCpf);
+    List<Disponibilidade> findAllByMedicoCpfAndDataDisp(String medicoCpf, String dataDisponibilidade);
 }
