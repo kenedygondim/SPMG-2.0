@@ -40,16 +40,13 @@ public class AvaliacaoMedicoService implements AvaliacaoMedicoRepository {
         return List.of();
     }
 
-
-    //Testar com dados reais
     @Override
     public AvaliacaoMedico addAvaliacaoMedico(AvaliarMedicoDto avaliarMedicoDto) {
+        //TO-DO: Implementar validação para não permitir que o paciente avalie o médico mais de uma vez. Ao invés disso, o paciente deve editar a avaliação já existente.
         Integer numeroConsultas = avaliacaoMedicoJpaRepository.contarConsultas(avaliarMedicoDto.medicoCpf(), avaliarMedicoDto.pacienteCpf());
 
-        System.out.println(numeroConsultas);
-
         if (numeroConsultas < 1) {
-            throw new BusinessException("Não é possível avaliar pois o paciente não possui consultas registradas com o médico selecionado." );
+            throw new BusinessException("Não é possível avaliar pois o paciente não possui consultas concluídas com o médico selecionado." );
         }
 
         AvaliacaoMedico avaliacaoMedico = new AvaliacaoMedico();
