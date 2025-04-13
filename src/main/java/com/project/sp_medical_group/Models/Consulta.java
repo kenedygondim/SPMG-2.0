@@ -1,5 +1,7 @@
 package com.project.sp_medical_group.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +27,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Consulta {
 
     @Id
@@ -44,10 +48,12 @@ public class Consulta {
     private Disponibilidade disponibilidade;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "especialidade_id", referencedColumnName = "especialidade_id")
     private Especialidade especialidade;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "paciente_cpf", referencedColumnName = "cpf")
     private Paciente paciente;
 }
