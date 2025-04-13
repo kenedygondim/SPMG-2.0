@@ -1,5 +1,6 @@
 package com.project.sp_medical_group.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,7 @@ public class Pessoa {
     private String numeroTelefone;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "endereco_id", referencedColumnName = "endereco_id")
     private Endereco endereco;
 }
