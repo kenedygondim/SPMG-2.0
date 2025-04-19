@@ -15,6 +15,11 @@ import lombok.Setter;
 @Setter
 public class Pessoa {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pessoa_id")
+    private Long pessoaId;
+
+    @Column(name = "cpf")
     private String cpf;
 
     @Column(name = "nome_completo")

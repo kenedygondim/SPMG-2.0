@@ -25,6 +25,7 @@ public class AvaliacaoClinica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
+    @Column(name = "avaliacao_id")
     private Long avaliacaoId;
 
     @Column(name = "numero_estrelas")
@@ -33,15 +34,13 @@ public class AvaliacaoClinica {
     @Column(name = "comentario")
     private String comentario;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "clinica_cnpj", referencedColumnName = "cnpj")
+    @JoinColumn(name = "clinica_id", referencedColumnName = "clinica_id")
     private Clinica clinica;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "paciente_cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "paciente_id", referencedColumnName = "paciente_id")
     private Paciente paciente;
 }

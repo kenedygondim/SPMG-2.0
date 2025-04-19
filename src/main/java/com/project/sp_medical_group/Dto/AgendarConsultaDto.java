@@ -5,13 +5,13 @@ import jakarta.validation.constraints.NotNull;
 
 public record AgendarConsultaDto(
     @NotNull(message = "O identificador do médico é obrigatório")
-    String disponibilidadeId,
+    Long disponibilidadeId,
     @NotNull(message = "O identificador da especialidade é obrigatório")
-    String especialidadeId,
+    Long especialidadeId,
     @NotBlank(message = "A descrição é obrigatória")
     String descricao,
-    @NotBlank(message = "O identificador do paciente é obrigatório")
-    String pacienteCpf,
-    boolean isTelemedicina
+    @NotNull(message = "O identificador do paciente é obrigatório")
+    Long pacienteId,
+    Boolean isTelemedicina
 ) {
 } 

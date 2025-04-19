@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 //CREATE TABLE tb_avaliacoes_medico (
 //        avaliacao_id INT IDENTITY(1,1),
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Table(name = "tb_avaliacoes_medico")
 @Getter
 @Setter
+@ToString
 public class AvaliacaoMedico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +40,12 @@ public class AvaliacaoMedico {
     //    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "medico_cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "medico_id", referencedColumnName = "medico_id")
     private Medico medico;
 
     //    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "paciente_cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "paciente_id", referencedColumnName = "paciente_id")
     private Paciente paciente;
 }

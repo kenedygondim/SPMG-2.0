@@ -8,9 +8,9 @@ import jakarta.validation.constraints.NotNull;
 
 public record AvaliarMedicoDto (
     @NotNull(message = "O identificador do médico é obrigatório")
-    String medicoCpf,
+    Long medicoId,
     @NotNull(message = "O identificador do paciente é obrigatório")
-    String pacienteCpf,
+    Long pacienteId,
     @NotBlank(message = "O comentário é obrigatório")
     @Length(min = 1, max = 255, message = "O comentário deve ter entre 1 e 255 caracteres")
     String comentario,

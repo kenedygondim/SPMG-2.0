@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ConsultaRepository {
     public abstract Consulta createConsulta(AgendarConsultaDto agendarConsultaDto);
-    public abstract List<Consulta> getAllConsultasByPacienteCpf(String pacienteCpf);
+    public abstract List<Consulta> getAllConsultasByPacienteId(Long pacienteId);
     public abstract String cancelConsulta(Integer consultaId);
 }

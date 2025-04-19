@@ -4,6 +4,7 @@ import com.project.sp_medical_group.Dto.AvaliarClinicaDto;
 import com.project.sp_medical_group.Handler.BusinessException;
 import com.project.sp_medical_group.Jpa.Repositories.AvaliacaoClinicaJpaRepository;
 import com.project.sp_medical_group.Models.AvaliacaoClinica;
+import com.project.sp_medical_group.Models.AvaliacaoMedico;
 import com.project.sp_medical_group.Models.Clinica;
 import com.project.sp_medical_group.Models.Paciente;
 import com.project.sp_medical_group.Repositories.AvaliacaoClinicaRepository;
@@ -13,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AvaliacaoClinicaService implements AvaliacaoClinicaRepository {
@@ -31,24 +33,38 @@ public class AvaliacaoClinicaService implements AvaliacaoClinicaRepository {
     }
 
     @Override
-    public List<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaCnpj(String clinicaCnpj) {
-        return avaliacaoClinicaJpaRepository.findByClinicaCnpj(clinicaCnpj);
+    public List<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaId(Long clinicaId) {
+        return avaliacaoClinicaJpaRepository.findByClinicaClinicaId(clinicaId);
     }
 
     @Override
-    public List<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteCpf(String pacienteCpf) {
+    public List<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteId(Long pacienteId) {
         return List.of();
     }
 
-    // Débito: Na tabela consulta não tem nenhuma referência a clínica, então não tem como validar se o paciente já fez consulta com a clínica.
     @Override
     public AvaliacaoClinica addAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto) {
+        Integer numeroConsultas = avaliacaoClinicaJpaRepository.contarConsultas(avaliarClinicaDto.clinicaId(), avaliarClinicaDto.pacienteId());
 
+        if (numeroConsultas < 1) {
+            throw new BusinessException("Não é possível avaliar pois o paciente não possui consultas concluídas realizadas na clínica selecionada." );
+        }
+
+        Optional<AvaliacaoClinica> avaliacaoClinicaExistente = avaliacaoClinicaJpaRepository.findByClinicaClinicaIdAndPacientePacienteId(avaliarClinicaDto.clinicaId(), avaliarClinicaDto.pacienteId());
+
+        if (avaliacaoClinicaExistente.isPresent()) {
+            avaliacaoClinicaExistente.get().setNumeroEstrelas(avaliarClinicaDto.numeroEstrelas());
+            avaliacaoClinicaExistente.get().setComentario(avaliarClinicaDto.comentario());
+
+            System.out.println("Atualizando avaliação médica existente: " + avaliacaoClinicaExistente.get().toString());
+
+            return avaliacaoClinicaJpaRepository.save(avaliacaoClinicaExistente.get());
+        }
 
         AvaliacaoClinica avaliacaoClinica = new AvaliacaoClinica();
         try {
-            Clinica clinicaReference = entityManager.getReference(Clinica.class, avaliarClinicaDto.clinicaCnpj());
-            Paciente pacienteReference = entityManager.getReference(Paciente.class, avaliarClinicaDto.pacienteCpf());
+            Clinica clinicaReference = entityManager.getReference(Clinica.class, avaliarClinicaDto.clinicaId());
+            Paciente pacienteReference = entityManager.getReference(Paciente.class, avaliarClinicaDto.pacienteId());
             avaliacaoClinica.setClinica(clinicaReference);
             avaliacaoClinica.setPaciente(pacienteReference);
             avaliacaoClinica.setNumeroEstrelas(avaliarClinicaDto.numeroEstrelas());

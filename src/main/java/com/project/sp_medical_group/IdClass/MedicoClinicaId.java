@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicoEspecialidadeId implements Serializable {
+public class MedicoClinicaId implements Serializable {
     private Long medico;
-    private Long especialidade;
+    private Long clinica;
 }

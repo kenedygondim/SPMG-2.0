@@ -34,10 +34,12 @@ public class Consulta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consulta_id")
-    private String consultaId;
+    private Long consultaId;
 
+    @Column(name = "descricao")
     private String descricao;
 
+    @Column(name = "situacao")
     private String situacao;
 
     @Column(name = "is_telemedicina")
@@ -54,7 +56,7 @@ public class Consulta {
 
     @OneToOne
     @JsonIgnore
-    @JoinColumn(name = "paciente_cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "paciente_id", referencedColumnName = "paciente_id")
     private Paciente paciente;
 }
 

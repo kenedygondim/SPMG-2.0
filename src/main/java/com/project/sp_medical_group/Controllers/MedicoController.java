@@ -41,13 +41,14 @@ public class MedicoController {
     }
 
     @GetMapping("/getAllMedicoEspecialidadesByMedicoCpf")
-    public ResponseEntity<List<MedicoEspecialidade>> getAllMedicoEspecialidadesByMedicoCpf(@RequestParam String medicoCpf) {
-        return ResponseEntity.ok(medicoEspecialidadeRepository.getAllMedicoEspecialidadesByMedicoCpf(medicoCpf));
+    public ResponseEntity<List<MedicoEspecialidade>> getAllMedicoEspecialidadesByMedicoCpf(@RequestParam Long medicoId) {
+        return ResponseEntity.ok(medicoEspecialidadeRepository.getAllMedicoEspecialidadesByMedicoId(medicoId));
     }
 
     @PostMapping("/createMedico")
-    public ResponseEntity<Medico> createMedico(@RequestBody @Valid CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto) {
-        return ResponseEntity.status(201).body(medicoRepository.createMedico(criarPessoaUsuarioMedicoEnderecoDto));
+    public ResponseEntity<String> createMedico(@RequestBody @Valid CriarPessoaUsuarioMedicoEnderecoDto criarPessoaUsuarioMedicoEnderecoDto) {
+        medicoRepository.createMedico(criarPessoaUsuarioMedicoEnderecoDto);
+        return ResponseEntity.status(201).body("Médico criado com sucesso!");
     }
 
     @PostMapping("/addAvaliacaoMedico")
@@ -58,7 +59,8 @@ public class MedicoController {
 
     @PostMapping("/associateMedicoEspecialidade")
     public ResponseEntity<String> associateMedicoEspecialidade(@RequestBody @Valid AssociarMedicoEspecialidadeDto associarMedicoEspecialidadeDto) {
+        System.out.println("Associando médico e especialidade: " + associarMedicoEspecialidadeDto);
         medicoEspecialidadeRepository.associateMedicoEspecialidade(associarMedicoEspecialidadeDto);
-        return ResponseEntity.status(201).body("Especialidade atribuída ao mpedico com sucesso!");
+        return ResponseEntity.status(201).body("Especialidade atribuída ao médico com sucesso!");
     }
 }

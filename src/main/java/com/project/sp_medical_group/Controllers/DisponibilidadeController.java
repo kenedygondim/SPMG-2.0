@@ -15,18 +15,16 @@ import java.util.List;
 @RequestMapping("spmg/disponibilidades")
 public class DisponibilidadeController {
     private final DisponibilidadeRepository disponibilidadeRepository;
-    private final DisponibilidadeJpaRepository disponibilidadeJpaRepository;
 
     @Autowired
-    public DisponibilidadeController(DisponibilidadeRepository disponibilidadeRepository, DisponibilidadeJpaRepository disponibilidadeJpaRepository) {
+    public DisponibilidadeController(DisponibilidadeRepository disponibilidadeRepository) {
         this.disponibilidadeRepository = disponibilidadeRepository;
-        this.disponibilidadeJpaRepository = disponibilidadeJpaRepository;
     }
 
     @GetMapping("/getAllDisponibilidadesByMedicoCpfAndDataDisp")
-    public List<Disponibilidade> getAllDisponibilidadesByMedicoCpfAndDataDisp(@RequestParam String medicoCpf,
+    public List<Disponibilidade> getAllDisponibilidadesByMedicoCpfAndDataDisp(@RequestParam Long medicoId,
                                                                               @RequestParam String dataDisp) {
-        return disponibilidadeJpaRepository.findAllByMedicoCpfAndDataDisp(medicoCpf, dataDisp);
+        return disponibilidadeRepository.getAllDisponibilidadesByMedicoIdAndDataDisp(medicoId, dataDisp);
     }
 
     @PostMapping("/createDisponibilidade")

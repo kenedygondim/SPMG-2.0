@@ -21,7 +21,7 @@ public class Especialidade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     @Column(name = "especialidade_id")
-    private Integer especialidadeId;
+    private Long especialidadeId;
 
     private String nome;
 

@@ -10,12 +10,12 @@ spring:
     database-platform: org.hibernate.dialect.SQLServerDialect
   flyway:
       enabled: true
-      url: jdbc:sqlserver://localhost:1433;databaseName=DB_SPMG;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://localhost:1433;databaseName=BD_SPMG;encrypt=true;trustServerCertificate=true;
       user: USER
       password: Senha123!
       locations: classpath:db/migration
   datasource:
-      url: jdbc:sqlserver://localhost:1433;databaseName=DB_SPMG;encrypt=true;trustServerCertificate=true;
+      url: jdbc:sqlserver://localhost:1433;databaseName=BD_SPMG;encrypt=true;trustServerCertificate=true;
       username: USER
       password: Senha123!
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver

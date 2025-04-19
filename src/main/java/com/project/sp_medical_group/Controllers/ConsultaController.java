@@ -20,9 +20,9 @@ public class ConsultaController {
         this.consultaRepository = consultaRepository;
     }
 
-    @GetMapping("/getAllConsultasByPacienteCpf")
-    public ResponseEntity<List<Consulta>> getAllConsultasByPacienteCpf(@RequestParam String pacienteCpf) {
-        return ResponseEntity.ok(consultaRepository.getAllConsultasByPacienteCpf(pacienteCpf));
+    @GetMapping("/getAllConsultasByPacienteId")
+    public ResponseEntity<List<Consulta>> getAllConsultasByPacienteId(@RequestParam Long pacienteId) {
+        return ResponseEntity.ok(consultaRepository.getAllConsultasByPacienteId(pacienteId));
     }
 
     @PostMapping("/createConsulta")

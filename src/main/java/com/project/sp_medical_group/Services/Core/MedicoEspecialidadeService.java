@@ -8,9 +8,11 @@ import com.project.sp_medical_group.Models.Medico;
 import com.project.sp_medical_group.Models.MedicoEspecialidade;
 import com.project.sp_medical_group.Repositories.MedicoEspecialidadeRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class MedicoEspecialidadeService implements MedicoEspecialidadeRepository
             System.out.println("Associando médico e especialidade: " + associarMedicoEspecialidadeDto);
 
             MedicoEspecialidade medicoEspecialidade = new MedicoEspecialidade();
-            medicoEspecialidade.setMedico(entityManager.getReference(Medico.class, associarMedicoEspecialidadeDto.medicoCpf()));
+            medicoEspecialidade.setMedico(entityManager.getReference(Medico.class, associarMedicoEspecialidadeDto.medicoId()));
             medicoEspecialidade.setEspecialidade(entityManager.getReference(Especialidade.class, associarMedicoEspecialidadeDto.especialidadeId()));
             medicoEspecialidade.setValorProcedimento(associarMedicoEspecialidadeDto.valorProcedimento());
 
@@ -45,13 +47,15 @@ public class MedicoEspecialidadeService implements MedicoEspecialidadeRepository
             return medicoEspecialidadeJpaRepository.save(medicoEspecialidade);
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException("Tentativa de quebra de CONSTRAINT: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new BusinessException("Médico ou especialidade não encontrados: " + e.getMessage());
         } catch (Exception e) {
             throw new BusinessException("Erro ao associar médico e especialidade: " + e.getMessage());
         }
     }
 
     @Override
-    public List<MedicoEspecialidade> getAllMedicoEspecialidadesByMedicoCpf(String medicoCpf) {
-        return medicoEspecialidadeJpaRepository.findByMedicoCpf(medicoCpf);
+    public List<MedicoEspecialidade> getAllMedicoEspecialidadesByMedicoId(Long medicoId) {
+        return medicoEspecialidadeJpaRepository.findByMedicoMedicoId(medicoId);
     }
 }

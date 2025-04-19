@@ -22,7 +22,7 @@ public class Disponibilidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "disponibilidade_id")
-    private Integer disponibilidadeId;
+    private Long disponibilidadeId;
 
     @Column(name = "data_disp")
     private String dataDisp;
@@ -34,7 +34,11 @@ public class Disponibilidade {
     private String horaFim;
 
     @ManyToOne
+    @JoinColumn(name = "clinica_id", referencedColumnName = "clinica_id")
+    private Clinica clinica;
+
+    @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "medico_cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "medico_id", referencedColumnName = "medico_id")
     private Medico medico;
 }

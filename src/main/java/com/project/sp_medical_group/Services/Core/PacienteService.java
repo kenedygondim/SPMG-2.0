@@ -42,7 +42,7 @@ public class PacienteService implements PacienteRepository {
             Endereco enderecoCriado = enderecoService.createEndereco(criarPessoaUsuarioEnderecoDto.endereco());
             Pessoa pessoaCriada = pessoaService.createPessoa(criarPessoaUsuarioEnderecoDto.pessoa(), enderecoCriado);
             Usuario usuarioCriado = usuarioService.createUsuario(criarPessoaUsuarioEnderecoDto.usuario(), Role.PACIENTE);
-            Paciente paciente = new Paciente(pessoaCriada.getCpf(), usuarioCriado);
+            Paciente paciente = new Paciente(pessoaCriada, usuarioCriado);
 
             return pacienteJpaRepository.save(paciente);
         }

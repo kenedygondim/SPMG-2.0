@@ -22,15 +22,18 @@ import lombok.Setter;
 @Setter
 public class Medico {
 
-    public Medico (String cpf, String crm, Usuario usuario) {
-        this.cpf = cpf;
+    public Medico (Pessoa pessoa, String crm, Usuario usuario) {
+        this.pessoa = pessoa;
         this.crm = crm;
         this.usuario = usuario;
     }
 
     @Id
-    private String cpf;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "medico_id")
+    private Long medicoId;
 
+    @Column(name = "crm")
     private String crm;
 
     @OneToOne
@@ -40,6 +43,6 @@ public class Medico {
 
     @OneToOne
     @JsonIgnore
-    @JoinColumn(name = "cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "pessoa_id", referencedColumnName = "pessoa_id")
     private Pessoa pessoa;
 }

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ConsultaJpaRepository extends JpaRepository<Consulta, Integer> {
-    List<Consulta> findAllByPacienteCpf(String pacienteCpf);
+public interface ConsultaJpaRepository extends JpaRepository<Consulta, Long> {
+    List<Consulta> findAllByPacientePacienteId(Long pacienteId);
 }

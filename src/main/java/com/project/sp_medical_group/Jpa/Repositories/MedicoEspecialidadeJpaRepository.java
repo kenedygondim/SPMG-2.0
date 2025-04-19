@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface MedicoEspecialidadeJpaRepository extends JpaRepository<MedicoEspecialidade, MedicoEspecialidadeId>
 {
-    List<MedicoEspecialidade> findByMedicoCpf(String medicoCpf);
+    List<MedicoEspecialidade> findByMedicoMedicoId(Long medicoId);
 }

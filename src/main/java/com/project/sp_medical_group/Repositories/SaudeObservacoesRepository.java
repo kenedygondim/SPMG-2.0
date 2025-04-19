@@ -4,5 +4,5 @@ import com.project.sp_medical_group.Dto.AdicionarSaudeObservacaoDto;
 import com.project.sp_medical_group.Models.SaudeObservacoes;
 
 public interface SaudeObservacoesRepository {
-    public abstract SaudeObservacoes addSaudeObservacao(String pacienteCpf, AdicionarSaudeObservacaoDto adicionarSaudeObservacaoDto);
+    public abstract SaudeObservacoes addSaudeObservacao(Long pacienteId, AdicionarSaudeObservacaoDto adicionarSaudeObservacaoDto);
 }

@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CriarEspecialidadeDto(
     @NotBlank(message = "O nome da especialidade é obrigatório")
-    String especialidadeNome,
+    String nome,
     @NotBlank(message = "A descrição da especialidade é obrigatória")
     @Length(min = 10, max = 150, message = "A descrição deve ter no mínimo 10 caracteres e no máximo 150")
-    String especialidadeDescricao
+    String descricao
 ) 
 {}

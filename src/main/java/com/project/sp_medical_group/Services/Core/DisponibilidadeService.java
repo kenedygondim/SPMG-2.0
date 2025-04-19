@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sp_medical_group.Dto.CriarDisponibilidadeDto;
 import com.project.sp_medical_group.Handler.BusinessException;
 import com.project.sp_medical_group.Jpa.Repositories.DisponibilidadeJpaRepository;
+import com.project.sp_medical_group.Models.Clinica;
 import com.project.sp_medical_group.Models.Disponibilidade;
 import com.project.sp_medical_group.Models.Medico;
 import com.project.sp_medical_group.Repositories.DisponibilidadeRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,20 +39,24 @@ public class DisponibilidadeService implements DisponibilidadeRepository {
         try {
             validateDiponibilidade(criarDisponibilidadeDto);
             Disponibilidade disponibilidade = objectMapper.convertValue( criarDisponibilidadeDto, Disponibilidade.class);
-            disponibilidade.setMedico(entityManager.getReference(Medico.class, criarDisponibilidadeDto.medicoCpf()));
+            disponibilidade.setMedico(entityManager.getReference(Medico.class, criarDisponibilidadeDto.medicoId()));
+            if (criarDisponibilidadeDto.clinicaId() != null)
+                disponibilidade.setClinica(entityManager.getReference(Clinica.class, criarDisponibilidadeDto.clinicaId()));
             return disponibilidadeJpaRepository.save(disponibilidade);
         } catch (IllegalArgumentException e) {
             throw new BusinessException("Argumento inválido para conversão de Dto para Classe: " + e.getMessage());
         } catch (DateTimeParseException e) {
             throw new BusinessException("Data ou hora inválida: " + e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new BusinessException("Médico não encontrado: " + e.getMessage());
         } catch (Exception e) {
             throw new BusinessException("Erro ao criar disponibilidade: " + e.getMessage());
         }
     }
 
     @Override
-    public List<Disponibilidade> getAllDisponibilidadesByMedicoCpfAndDataDisp(String medicoCpf, String dataDisp) {
-        return disponibilidadeJpaRepository.findAllByMedicoCpfAndDataDisp(medicoCpf, dataDisp);
+    public List<Disponibilidade> getAllDisponibilidadesByMedicoIdAndDataDisp(Long medicoId, String dataDisp) {
+        return disponibilidadeJpaRepository.findAllByMedicoMedicoIdAndDataDisp(medicoId, dataDisp);
     }
 
     private void validateDiponibilidade (CriarDisponibilidadeDto criarDisponibilidadeDto) {

@@ -1,6 +1,5 @@
 package com.project.sp_medical_group.Services.Core;
 
-import com.project.sp_medical_group.Dto.AvaliarClinicaDto;
 import com.project.sp_medical_group.Dto.AvaliarMedicoDto;
 import com.project.sp_medical_group.Handler.BusinessException;
 import com.project.sp_medical_group.Jpa.Repositories.AvaliacaoMedicoJpaRepository;
@@ -12,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AvaliacaoMedicoService implements AvaliacaoMedicoRepository {
@@ -31,28 +31,38 @@ public class AvaliacaoMedicoService implements AvaliacaoMedicoRepository {
     }
 
     @Override
-    public List<AvaliacaoMedico> getAllAvaliacoesMedicoByMedicoCrm(String medicoCrm) {
+    public List<AvaliacaoMedico> getAllAvaliacoesMedicoByMedicoId(Long medicoId) {
         return List.of();
     }
 
     @Override
-    public List<AvaliacaoMedico> getAllAvaliacoesMedicoByPacienteCpf(String pacienteCpf) {
+    public List<AvaliacaoMedico> getAllAvaliacoesMedicoByPacienteId(Long pacienteId) {
         return List.of();
     }
 
     @Override
     public AvaliacaoMedico addAvaliacaoMedico(AvaliarMedicoDto avaliarMedicoDto) {
-        //TO-DO: Implementar validação para não permitir que o paciente avalie o médico mais de uma vez. Ao invés disso, o paciente deve editar a avaliação já existente.
-        Integer numeroConsultas = avaliacaoMedicoJpaRepository.contarConsultas(avaliarMedicoDto.medicoCpf(), avaliarMedicoDto.pacienteCpf());
+        Integer numeroConsultas = avaliacaoMedicoJpaRepository.contarConsultas(avaliarMedicoDto.medicoId(), avaliarMedicoDto.pacienteId());
 
         if (numeroConsultas < 1) {
             throw new BusinessException("Não é possível avaliar pois o paciente não possui consultas concluídas com o médico selecionado." );
         }
 
+        Optional<AvaliacaoMedico> avaliacaoMedicoExistente = avaliacaoMedicoJpaRepository.findByMedicoMedicoIdAndPacientePacienteId(avaliarMedicoDto.medicoId(), avaliarMedicoDto.pacienteId());
+
+        if (avaliacaoMedicoExistente.isPresent()) {
+            avaliacaoMedicoExistente.get().setNumeroEstrelas(avaliarMedicoDto.numeroEstrelas());
+            avaliacaoMedicoExistente.get().setComentario(avaliarMedicoDto.comentario());
+
+            System.out.println("Atualizando avaliação médica existente: " + avaliacaoMedicoExistente.get().toString());
+
+            return avaliacaoMedicoJpaRepository.save(avaliacaoMedicoExistente.get());
+        }
+
         AvaliacaoMedico avaliacaoMedico = new AvaliacaoMedico();
         try {
-            Medico medicoReference = entityManager.getReference(Medico.class, avaliarMedicoDto.medicoCpf());
-            Paciente pacienteReference = entityManager.getReference(Paciente.class, avaliarMedicoDto.pacienteCpf());
+            Medico medicoReference = entityManager.getReference(Medico.class, avaliarMedicoDto.medicoId());
+            Paciente pacienteReference = entityManager.getReference(Paciente.class, avaliarMedicoDto.pacienteId());
             avaliacaoMedico.setMedico(medicoReference);
             avaliacaoMedico.setPaciente(pacienteReference);
             avaliacaoMedico.setNumeroEstrelas(avaliarMedicoDto.numeroEstrelas());

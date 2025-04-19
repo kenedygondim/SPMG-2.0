@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface MedicoEspecialidadeRepository {
     public abstract MedicoEspecialidade associateMedicoEspecialidade(AssociarMedicoEspecialidadeDto associarMedicoEspecialidadeDto);
-    public abstract List<MedicoEspecialidade> getAllMedicoEspecialidadesByMedicoCpf(String medicoCpf);
+    public abstract List<MedicoEspecialidade> getAllMedicoEspecialidadesByMedicoId(Long medicoId);
 
 }

@@ -43,9 +43,9 @@ public class MedicoService implements MedicoRepository {
         Medico medico = new Medico ();
         try {
             Endereco endereco = enderecoService.createEndereco(criarPessoaUsuarioMedicoEnderecoDto.endereco());
-            pessoaService.createPessoa(criarPessoaUsuarioMedicoEnderecoDto.pessoa(), endereco);
+            Pessoa pessoa = pessoaService.createPessoa(criarPessoaUsuarioMedicoEnderecoDto.pessoa(), endereco);
             Usuario usuario = usuarioService.createUsuario(criarPessoaUsuarioMedicoEnderecoDto.usuario(), Role.MEDICO);
-            medico.setCpf(criarPessoaUsuarioMedicoEnderecoDto.pessoa().cpf());
+            medico.setPessoa(pessoa);
             medico.setCrm(criarPessoaUsuarioMedicoEnderecoDto.medico().crm());
             medico.setUsuario(usuario);
         }

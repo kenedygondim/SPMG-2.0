@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SaudeObservacoesService implements SaudeObservacoesRepository {
     @Override
-    public SaudeObservacoes addSaudeObservacao(String pacienteCpf, AdicionarSaudeObservacaoDto adicionarSaudeObservacaoDto) {
+    public SaudeObservacoes addSaudeObservacao(Long pacienteId, AdicionarSaudeObservacaoDto adicionarSaudeObservacaoDto) {
         return null;
     }
 }

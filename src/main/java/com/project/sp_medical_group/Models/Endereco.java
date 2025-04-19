@@ -28,7 +28,7 @@ public class Endereco {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "endereco_id")
     @Setter(AccessLevel.NONE)
-    private Integer enderecoId;
+    private Long enderecoId;
 
     @Column(name = "cep")
     private String cep;

@@ -1,5 +1,6 @@
 package com.project.sp_medical_group.Controllers;
 
+import com.project.sp_medical_group.Dto.AssociarMedicoClinicaDto;
 import com.project.sp_medical_group.Dto.AvaliarClinicaDto;
 import com.project.sp_medical_group.Dto.CriarClinicaEnderecoDto;
 import com.project.sp_medical_group.Models.AvaliacaoClinica;
@@ -42,8 +43,8 @@ public class ClinicaController {
     }
 
     @GetMapping("/getAllAvaliacoesClinicaByClinicaCnpj")
-    public ResponseEntity<List<AvaliacaoClinica>> getAllAvaliacoesClinicaByClinicaCnpj(@RequestParam String clinicaCnpj) {
-        List<AvaliacaoClinica> avaliacoes = avaliacaoClinicaRepository.getAllAvaliacoesClinicaByClinicaCnpj(clinicaCnpj);
+    public ResponseEntity<List<AvaliacaoClinica>> getAllAvaliacoesClinicaByClinicaId(@RequestParam Long clinicaId) {
+        List<AvaliacaoClinica> avaliacoes = avaliacaoClinicaRepository.getAllAvaliacoesClinicaByClinicaId(clinicaId);
         return ResponseEntity.ok(avaliacoes);
     }
 
@@ -52,4 +53,11 @@ public class ClinicaController {
         avaliacaoClinicaRepository.addAvaliacaoClinica(avaliarClinicaDto);
         return ResponseEntity.ok("Avaliação adicionada com sucesso!");
     }
+
+    @PostMapping("/associateMedicoClinica")
+    public ResponseEntity<String> associateMedicoClinica(@RequestBody @Valid AssociarMedicoClinicaDto associarMedicoClinicaDto) {
+        medicoClinicaRepository.associateMedicoClinica(associarMedicoClinicaDto);
+        return ResponseEntity.ok("Médico associado à clínica com sucesso!");
+    }
+
 }

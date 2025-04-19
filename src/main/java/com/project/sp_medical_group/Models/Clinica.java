@@ -18,6 +18,10 @@ public class Clinica {
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "clinica_id")
+    private Long clinicaId;
+
     @Column(name = "cnpj")
     private String cnpj;
 

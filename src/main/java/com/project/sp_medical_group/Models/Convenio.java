@@ -11,7 +11,7 @@ public class Convenio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "convenio_id")
-    private int convenioId;
+    private Long convenioId;
 
     @Column(name = "convenio_nome")
     @Setter

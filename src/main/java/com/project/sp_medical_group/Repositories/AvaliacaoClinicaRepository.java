@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AvaliacaoClinicaRepository {
     public abstract AvaliacaoClinica createAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto);
-    public abstract List<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaCnpj(String clinicaCnpj);
-    public abstract List<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteCpf(String pacienteCpf);
+    public abstract List<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaId(Long clinicaId);
+    public abstract List<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteId(Long pacienteId);
     public abstract AvaliacaoClinica addAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto);
 }

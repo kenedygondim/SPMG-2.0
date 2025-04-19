@@ -27,7 +27,7 @@ import lombok.ToString;
 public class MedicoEspecialidade {
     @Id
     @ManyToOne
-    @JoinColumn(name = "medico_cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "medico_id", referencedColumnName = "medico_id")
     private Medico medico;
 
     @Id

@@ -11,16 +11,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Paciente {
-    public Paciente (String cpf, Usuario usuario) {
-        this.cpf = cpf;
+    public Paciente (Pessoa pessoa, Usuario usuario) {
+        this.pessoa = pessoa;
         this.usuario = usuario;
     }
 
     @Id
-    private String cpf;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "paciente_id")
+    private Long pacienteId;
 
     @OneToOne
-    @JoinColumn(name = "cpf", referencedColumnName = "cpf")
+    @JoinColumn(name = "pessoa_id", referencedColumnName = "pessoa_id")
     private Pessoa pessoa;
 
     @OneToOne

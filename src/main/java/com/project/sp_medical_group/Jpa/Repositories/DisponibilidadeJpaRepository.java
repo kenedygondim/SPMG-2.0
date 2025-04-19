@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DisponibilidadeJpaRepository extends JpaRepository<Disponibilidade, Integer> {
-    List<Disponibilidade> findAllByMedicoCpfAndDataDisp(String medicoCpf, String dataDisponibilidade);
+public interface DisponibilidadeJpaRepository extends JpaRepository<Disponibilidade, Long> {
+    List<Disponibilidade> findAllByMedicoMedicoIdAndDataDisp(Long medicoId, String dataDisponibilidade);
 }
