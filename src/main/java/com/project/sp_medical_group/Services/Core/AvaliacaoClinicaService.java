@@ -28,18 +28,13 @@ public class AvaliacaoClinicaService implements AvaliacaoClinicaRepository {
     }
 
     @Override
-    public AvaliacaoClinica createAvaliacaoClinica(AvaliarClinicaDto avaliarClinicaDto) {
-        return null;
-    }
-
-    @Override
     public List<AvaliacaoClinica> getAllAvaliacoesClinicaByClinicaId(Long clinicaId) {
         return avaliacaoClinicaJpaRepository.findByClinicaClinicaId(clinicaId);
     }
 
     @Override
     public List<AvaliacaoClinica> getAllAvaliacoesClinicaByPacienteId(Long pacienteId) {
-        return List.of();
+        return avaliacaoClinicaJpaRepository.findByPacientePacienteId(pacienteId);
     }
 
     @Override
