@@ -42,7 +42,7 @@ public class ClinicaController {
         return ResponseEntity.ok("Clinica adicionada com sucesso!");
     }
 
-    @GetMapping("/getAllAvaliacoesClinicaByClinicaCnpj")
+    @GetMapping("/getAllAvaliacoesClinicaByClinicaId")
     public ResponseEntity<List<AvaliacaoClinica>> getAllAvaliacoesClinicaByClinicaId(@RequestParam Long clinicaId) {
         List<AvaliacaoClinica> avaliacoes = avaliacaoClinicaRepository.getAllAvaliacoesClinicaByClinicaId(clinicaId);
         return ResponseEntity.ok(avaliacoes);
