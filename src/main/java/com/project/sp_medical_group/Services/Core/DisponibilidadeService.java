@@ -59,17 +59,31 @@ public class DisponibilidadeService implements DisponibilidadeRepository {
         return disponibilidadeJpaRepository.findAllByMedicoMedicoIdAndDataDisp(medicoId, dataDisp);
     }
 
+    @Override
+    public Disponibilidade getDisponibilidadeById(Long disponibilidadeId) {
+        return disponibilidadeJpaRepository.findById(disponibilidadeId)
+                .orElseThrow(() -> new EntityNotFoundException("Disponibilidade não encontrada"));
+    }
+
     private void validateDiponibilidade (CriarDisponibilidadeDto criarDisponibilidadeDto) {
         //TO-DO: Não permitir que disponibilidades no mesmo dia e horário sejam criadas.
+        //DONE: Não permitir que disponibilidades sejam criadas sem pelo menos 3 horas de antecedência
         try {
             LocalDate dataAtual = LocalDate.now();
             LocalDate dataDisponibilidade = LocalDate.parse(criarDisponibilidadeDto.dataDisp());
             LocalTime horaInicioDisponibilidade = LocalTime.parse(criarDisponibilidadeDto.horaInicio());
             LocalTime horaFimDisponibilidade = LocalTime.parse(criarDisponibilidadeDto.horaFim());
+
             if (dataAtual.equals(dataDisponibilidade)) {
                 LocalTime horaAtual = LocalTime.now();
-                if (!(horaInicioDisponibilidade.isAfter(horaAtual) && horaFimDisponibilidade.isAfter(horaInicioDisponibilidade)))
+                Boolean isHorarioOcupado = disponibilidadeJpaRepository.isHorarioOcupado(criarDisponibilidadeDto.dataDisp(), criarDisponibilidadeDto.horaInicio(), criarDisponibilidadeDto.horaFim());
+                if (isHorarioOcupado)
+                    throw new BusinessException("Conflito: Já existe uma disponibilidade cadastrada nesse dia e horário");
+                else if (horaAtual.plusHours(3).isAfter(horaInicioDisponibilidade))
+                    throw new BusinessException("A consulta deve ser agendada com pelo menos 3 horas de antecedência");
+                else if (!(horaInicioDisponibilidade.isAfter(horaAtual) && horaFimDisponibilidade.isAfter(horaInicioDisponibilidade)))
                     throw new BusinessException("Horário da consulta deve ser maior que o horário atual");
+
             } else if (dataAtual.isAfter(dataDisponibilidade))
                 throw new BusinessException("Data da consulta deve ser maior ou igual a data atual");
             if (!horaFimDisponibilidade.isAfter(horaInicioDisponibilidade))
