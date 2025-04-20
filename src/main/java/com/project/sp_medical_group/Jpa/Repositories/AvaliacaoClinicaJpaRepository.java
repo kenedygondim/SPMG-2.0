@@ -17,5 +17,6 @@ public interface AvaliacaoClinicaJpaRepository extends JpaRepository<AvaliacaoCl
             @Param("paciente_id") Long pacienteId);
     Optional<AvaliacaoClinica> findByClinicaClinicaIdAndPacientePacienteId(Long clinicaId, Long pacienteId);
     List<AvaliacaoClinica> findByClinicaClinicaId(Long clinicaId);
+    List<AvaliacaoClinica> findByPacientePacienteId(Long pacienteId);
 }
 
