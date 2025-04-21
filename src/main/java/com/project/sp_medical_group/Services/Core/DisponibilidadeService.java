@@ -76,7 +76,7 @@ public class DisponibilidadeService implements DisponibilidadeRepository {
 
             if (dataAtual.equals(dataDisponibilidade)) {
                 LocalTime horaAtual = LocalTime.now();
-                Boolean isHorarioOcupado = disponibilidadeJpaRepository.isHorarioOcupado(criarDisponibilidadeDto.dataDisp(), criarDisponibilidadeDto.horaInicio(), criarDisponibilidadeDto.horaFim());
+                Boolean isHorarioOcupado = disponibilidadeJpaRepository.isHorarioOcupado(criarDisponibilidadeDto.dataDisp(), criarDisponibilidadeDto.horaInicio(), criarDisponibilidadeDto.horaFim(), criarDisponibilidadeDto.medicoId());
                 if (isHorarioOcupado)
                     throw new BusinessException("Conflito: Já existe uma disponibilidade cadastrada nesse dia e horário");
                 else if (horaAtual.plusHours(3).isAfter(horaInicioDisponibilidade))

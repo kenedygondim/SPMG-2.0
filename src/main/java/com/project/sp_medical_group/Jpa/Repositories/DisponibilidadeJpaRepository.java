@@ -14,9 +14,10 @@ public interface DisponibilidadeJpaRepository extends JpaRepository<Disponibilid
     @Query("SELECT EXISTS(" +
             "SELECT 1 FROM Disponibilidade d " +
             "WHERE d.dataDisp = ?1 " +
+            "AND d.medico.medicoId = ?4 " +
             "AND NOT (" +
             "   d.horaFim <= ?2 OR" +  // Termina antes ou no início do novo
             "   d.horaInicio >= ?3" +  // Começa depois ou no final do novo
             "))")
-    Boolean isHorarioOcupado(String dataDisp, String horaInicio, String horaFim);
+    Boolean isHorarioOcupado(String dataDisp, String horaInicio, String horaFim, Long medicoId);
 }
