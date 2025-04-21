@@ -9,33 +9,31 @@ import com.project.sp_medical_group.Repositories.OCIObjectStorageRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @Service
 public class OCIObjectStorageService implements OCIObjectStorageRepository {
 
      private final ObjectStorage objectStorage;
 
-     public OCIObjectStorageService(
-                 @Autowired ObjectStorage objectStorage
-                 )
+     public OCIObjectStorageService(@Autowired ObjectStorage objectStorage)
      {
          this.objectStorage = objectStorage;
      }
 
 
-     public String uploadFile () throws FileNotFoundException {
-         File file = new File("/home/kenedy/imagens/preview-consulta.png");
-
+     public String uploadFile (MultipartFile fileSent, String fileName) throws IOException {
          var putRequest = PutObjectRequest.builder()
                  .bucketName("sp-medical-group")
                  .namespaceName(objectStorage.getNamespace(GetNamespaceRequest.builder().build()).getValue())
-                 .objectName("preview-consulta.png")
-                 .putObjectBody(new FileInputStream(file))
-                 .contentLength(file.length())
+                 .objectName("profile-pictures/" + fileName)
+                 .contentLength(fileSent.getSize())
+                 .putObjectBody(fileSent.getInputStream())
                  .build();
 
          PutObjectResponse response = objectStorage.putObject(putRequest);
