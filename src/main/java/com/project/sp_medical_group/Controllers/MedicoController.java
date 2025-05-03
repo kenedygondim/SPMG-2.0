@@ -1,9 +1,6 @@
 package com.project.sp_medical_group.Controllers;
 
-import com.project.sp_medical_group.Dto.AssociarMedicoEspecialidadeDto;
-import com.project.sp_medical_group.Dto.AvaliarClinicaDto;
-import com.project.sp_medical_group.Dto.AvaliarMedicoDto;
-import com.project.sp_medical_group.Dto.CriarPessoaUsuarioMedicoEnderecoDto;
+import com.project.sp_medical_group.Dto.*;
 import com.project.sp_medical_group.Models.Medico;
 import com.project.sp_medical_group.Models.MedicoEspecialidade;
 import com.project.sp_medical_group.Repositories.*;
@@ -62,5 +59,12 @@ public class MedicoController {
         System.out.println("Associando médico e especialidade: " + associarMedicoEspecialidadeDto);
         medicoEspecialidadeRepository.associateMedicoEspecialidade(associarMedicoEspecialidadeDto);
         return ResponseEntity.status(201).body("Especialidade atribuída ao médico com sucesso!");
+    }
+
+    @PostMapping("/associateMedicoConvenio")
+    public ResponseEntity<String> associateMedicoConvenio(@RequestBody @Valid AssociarMedicoConvenioDto associarMedicoConvenioDto) {
+        System.out.println("Associando médico e convênio: " + associarMedicoConvenioDto);
+        medicoConvenioRepository.associateMedicoConvenio(associarMedicoConvenioDto);
+        return ResponseEntity.status(201).body("Médico atribuído ao convênio com sucesso!");
     }
 }
