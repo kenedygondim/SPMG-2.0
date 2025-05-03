@@ -1,0 +1,18 @@
+{
+  "name": "buscar_medicos",
+  "description": "Busca médicos por especialidade, cidade e convênio",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "especialidade": {
+        "type": "string",
+        "description": "Especialidade médica desejada"
+      },
+      "convenio": {
+        "type": "string",
+        "description": "Convênio que o paciente possui"
+      }
+    },
+    "required": ["especialidade", "convenio"]
+  }
+}
