@@ -1,6 +1,7 @@
 package com.project.sp_medical_group.Services.Core;
 
 import com.project.sp_medical_group.Dto.CriarPessoaUsuarioMedicoEnderecoDto;
+import com.project.sp_medical_group.Dto.MedicosDetalhesDto;
 import com.project.sp_medical_group.Enum.Role;
 import com.project.sp_medical_group.Handler.BusinessException;
 import com.project.sp_medical_group.Jpa.Repositories.MedicoJpaRepository;
@@ -57,5 +58,10 @@ public class MedicoService implements MedicoRepository {
         }
 
         return medicoJpaRepository.save(medico);
+    }
+
+    @Override
+    public List<MedicosDetalhesDto> getMedicoDetalhes(String convenioNome, String especialidadeNome) {
+        return medicoJpaRepository.getMedicoDetalhes(convenioNome, especialidadeNome);
     }
 }
