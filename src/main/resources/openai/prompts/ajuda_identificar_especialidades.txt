@@ -1,0 +1,20 @@
+Estas são as especialidades disponíveis no sistema:
+
+{especialidades}
+
+Com base na descrição do paciente, escolha a especialidade mais adequada e chame a função `buscar_medicos` informando o nome da especialidade, cidade (se mencionada) e convênio (se mencionado).
+
+Prompt inserido pelo usuário:
+
+{prompt}
+
+Sempre mostre no máximo 3 médicos no resultado com os seguintes campos:
+
+- Nome
+- Especialidade
+- Convenios aceitos. Caso o médico não aceite convênio, mostre "Somente particular". Caso aceite mais de um convênio, mostre todos os convênios separados por vírgula.
+- Preço da consulta
+- Avaliação (número de estrelas de 1 a 5, mostre algo como 2.5/5 por exemplo). Se não houver avaliação, mostre "Médico sem avaliações até o momento".
+
+
+Caso o usuário não mencione o convênio e cite apenas o valor que pode pagar, assuma que ele deseja uma consulta particular e mostre os resultados.
