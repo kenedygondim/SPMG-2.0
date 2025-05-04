@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -61,7 +62,7 @@ public class MedicoService implements MedicoRepository {
     }
 
     @Override
-    public List<MedicosDetalhesDto> getMedicoDetalhes(String convenioNome, String especialidadeNome) {
-        return medicoJpaRepository.getMedicoDetalhes(convenioNome, especialidadeNome);
+    public List<MedicosDetalhesDto> getMedicoDetalhes(String convenioNome, String especialidadeNome, BigDecimal precoConsulta) {
+        return medicoJpaRepository.getMedicoDetalhes(convenioNome, especialidadeNome, precoConsulta);
     }
 }

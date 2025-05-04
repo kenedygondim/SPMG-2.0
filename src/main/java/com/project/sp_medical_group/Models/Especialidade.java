@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 //CREATE TABLE tb_especialidades (
 //        especialidade_id INT IDENTITY(1,1),
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Table(name = "tb_especialidades")
 @Getter
 @Setter
+@ToString
 public class Especialidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
