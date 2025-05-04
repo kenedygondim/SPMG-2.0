@@ -1,0 +1,14 @@
+{
+  "name": "buscar_clinicas",
+  "description": "Busca clinicas perto do paciente ou em uma cidade específica",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "cidade": {
+        "type": "string",
+        "description": "Cidade onde o paciente deseja buscar clinicas"
+      }
+    },
+    "required": ["cidade"]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "buscar_medicos",
-  "description": "Busca médicos por especialidade, cidade e convênio",
+  "description": "Busca médicos por especialidade, cidade, convênio e preço da consulta",
   "parameters": {
     "type": "object",
     "properties": {
@@ -11,8 +11,12 @@
       "convenio": {
         "type": "string",
         "description": "Convênio que o paciente possui"
+      },
+      "precoConsulta": {
+        "type": "number",
+        "description": "Preço máximo da consulta"
       }
     },
-    "required": ["especialidade", "convenio"]
+    "required": ["especialidade"]
   }
 }

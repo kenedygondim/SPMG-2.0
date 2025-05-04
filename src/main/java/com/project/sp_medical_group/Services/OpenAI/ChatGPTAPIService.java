@@ -3,6 +3,8 @@ package com.project.sp_medical_group.Services.OpenAI;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.sp_medical_group.Dto.MedicosDetalhesDto;
+import com.project.sp_medical_group.Models.Especialidade;
+import com.project.sp_medical_group.Repositories.EspecialidadeRepository;
 import com.project.sp_medical_group.Repositories.MedicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,12 +12,16 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatGPTAPIService {
@@ -23,18 +29,22 @@ public class ChatGPTAPIService {
     private String apiKey;
     private final ObjectMapper mapper;
     private final MedicoRepository medicoRepository;
+    private final EspecialidadeRepository especialidadeRepository;
 
     @Autowired
-    public ChatGPTAPIService(MedicoRepository medicoRepository, ObjectMapper mapper) {
+    public ChatGPTAPIService(MedicoRepository medicoRepository, ObjectMapper mapper, EspecialidadeRepository especialidadeRepository) {
         this.medicoRepository = medicoRepository;
         this.mapper = mapper;
+        this.especialidadeRepository = especialidadeRepository;
     }
 
     public String chat(String prompt) throws Exception {
 
         Map<String, Object> funcaoBuscarMedicos = this.loadFunction("buscar_medicos.json");
+        Map<String, Object> funcaoBuscarClinicas = this.loadFunction("buscar_clinicas.json"); // TODO: Implementar a função buscar_clinicas.json
 
-        System.out.println("\n1 - Função buscar médicos carregada: " + funcaoBuscarMedicos);
+
+        String instrucoesEssenciais = Files.readString(Paths.get("src/main/resources/openai/prompts/ajuda_identificar_especialidades.txt"));
 
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-4.1-mini",
@@ -44,10 +54,10 @@ public class ChatGPTAPIService {
                 "frequency_penalty", 0.0,
                 "presence_penalty", 0.6,
                 "messages", List.of(
-                        Map.of("role", "system", "content", "Você é um assistente virtual empático, gentil e altamente educado, que atua em uma plataforma que conecta pacientes a médicos. Sempre responda com empatia, cordialidade e profissionalismo, mesmo que o paciente seja rude ou agressivo. Use uma linguagem acessível, clara e acolhedora. Jamais ofereça diagnósticos definitivos e sempre deixe claro que a triagem inicial feita por você é apenas uma sugestão e não substitui uma consulta com um médico de verdade. Diga isso de forma suave, sem alarmar o paciente. Adapte o nível de detalhamento de acordo com o que o usuário parece precisar. Quando for solicitado, explique os termos médicos de forma simples. Quando o paciente estiver indeciso sobre qual médico procurar, ajude a identificar a especialidade ideal com base nos sintomas informados. Ao sugerir médicos, leve em consideração os seguintes critérios, se disponíveis: - Especialidade médica - Localização da consulta - Se aceita convênio (e quais) - Número de estrelas recebidas - Número de consultas realizadas - Preço da consulta. Se o paciente não fornecer informações suficientes, faça perguntas educadas para completar a triagem. Nunca faça suposições perigosas ou que possam causar confusão. Seja sempre prestativo, paciente e focado em ajudar da melhor forma possível. Sempre seja claro e use poucas frases ao responder o paciente. Somente responda perguntas relacionadas ao contexto saúde/medicina."),
+                        Map.of("role", "system", "content", instrucoesEssenciais),
                         Map.of("role", "user", "content", prompt)
                 ),
-                "functions", List.of(funcaoBuscarMedicos),
+                "functions", List.of(funcaoBuscarMedicos, funcaoBuscarClinicas),
                 "function_call", "auto"
         );
 
@@ -62,48 +72,51 @@ public class ChatGPTAPIService {
         List<Map<String, Object>> choices = (List<Map<String, Object>>) parsed.get("choices");
         Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
 
+
+
         if (message.containsKey("function_call")) {
             Map<String, Object> functionCall = (Map<String, Object>) message.get("function_call");
             String nomeFuncao = (String) functionCall.get("name");
             String argsJson = (String) functionCall.get("arguments");
             Map<String, String> argumentos = mapper.readValue(argsJson, new TypeReference<>() {});
 
-            System.out.println("Parametro 1: " + argumentos.get("convenio"));
-            System.out.println("Parametro 2: " + argumentos.get("especialidade"));
+            BigDecimal valorConsulta = null;
 
+            if("buscar_medicos".equals(nomeFuncao)) {
+                try {
+                    valorConsulta = new BigDecimal(argumentos.get("valor_consulta"));
+                } catch (NumberFormatException e) {
+                    System.out.println("Erro ao converter valor da consulta: " + e.getMessage());
+                }
 
-            // Chama a função real
-            List<MedicosDetalhesDto> medicos = medicoRepository.getMedicoDetalhes(argumentos.get("convenio"), argumentos.get("especialidade"));
+                List<MedicosDetalhesDto> medicos = medicoRepository.getMedicoDetalhes(argumentos.get("convenio"), argumentos.get("especialidade"), valorConsulta);
 
-            System.out.println("\n4 - Médicos encontrados: " + medicos);
+                if (medicos.isEmpty()) {
+                    return "Não encontramos médicos disponíveis com os parâmetros fornecidos. Você pode tentar novamente com outros parâmetros ou realizar uma consulta avançada na sessão de filtros.";
+                }
 
+                String respostaIA = sendToOpenAI((Map.of(
+                        "model", "gpt-4.1-mini",
+                        "messages", List.of(
+                                Map.of("role", "user", "content", this.buildPrompt(prompt)),
+                                Map.of("role", "function", "name", nomeFuncao, "content", mapper.writeValueAsString(medicos))
+                        )
+                )));
 
-            if (medicos.isEmpty()) {
-                return "Desculpe, não encontramos médicos disponíveis com os parâmetros fornecidos.";
+                Map<String, Object> respostaFinal = mapper.readValue(respostaIA, new TypeReference<>() {});
+                Map<String, Object> mensagemFinal = (Map<String, Object>) ((List<?>) respostaFinal.get("choices")).get(0);
+                return ((Map<?, ?>) mensagemFinal.get("message")).get("content").toString();
+
             }
-
-
-            // Envia a resposta da função de volta para a IA
-            String respostaIA = sendToOpenAI((Map.of(
-                    "model", "gpt-4.1-mini",
-                    "messages", List.of(
-                            Map.of("role", "user", "content", prompt),
-                            Map.of("role", "function", "name", nomeFuncao, "content", mapper.writeValueAsString(medicos))
-                    )
-            )));
-
-            System.out.println("\n5 - Resposta da IA após chamada de função: " + respostaIA);
-
-            Map<String, Object> respostaFinal = mapper.readValue(respostaIA, new TypeReference<>() {});
-            Map<String, Object> mensagemFinal = (Map<String, Object>) ((List<?>) respostaFinal.get("choices")).get(0);
-            return ((Map<?, ?>) mensagemFinal.get("message")).get("content").toString();
+            else {
+                System.out.println("A função chamada não é a buscar_medicos.");
+            }
         }
 
-        // Caso a IA tenha respondido sem function_call
         return message.get("content").toString();
     }
 
-    public Map<String, Object> loadFunction(String nomeArquivo) throws IOException {
+    private Map<String, Object> loadFunction(String nomeArquivo) throws IOException {
         InputStream input = getClass().getClassLoader().getResourceAsStream("openai/functions/" + nomeArquivo);
         return mapper.readValue(input, new TypeReference<>() {});
     }
@@ -121,5 +134,18 @@ public class ChatGPTAPIService {
         return response.body();
     }
 
+    private String buildPrompt(String prompt) throws IOException {
+        try {
+            String content = Files.readString(Paths.get("src/main/resources/openai/prompts/ajuda_identificar_especialidades.txt"));
+            String especialidades = especialidadeRepository.getAllEspecialidades().toString();
+            content = content.replace("{especialidades}", especialidades).replace("{prompt}", prompt);
+
+            System.out.println(content);
+
+            return content;
+        } catch (IOException e) {
+            throw new IOException("Erro ao ler o arquivo de prompt: " + e.getMessage());
+        }
+    }
 
 }
